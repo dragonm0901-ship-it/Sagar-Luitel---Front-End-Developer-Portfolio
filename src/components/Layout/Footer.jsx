@@ -11,7 +11,7 @@ const Footer = () => {
 
                 {/* Left: Contact CTA */}
                 <div className="flex items-center gap-4 order-2 md:order-1">
-                    <a href="mailto:contact@sagar.dev" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white hover:text-lime transition-colors">
+                    <a href="mailto:sagar.luitel.0909@gmail.com" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-white hover:text-lime transition-colors">
                         <span className="w-2 h-2 rounded-full bg-lime group-hover:animate-pulse" />
                         Start a Project <ArrowUpRight size={16} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
                     </a>
@@ -19,8 +19,13 @@ const Footer = () => {
 
                 {/* Center: Socials */}
                 <div className="flex gap-3 order-1 md:order-2">
-                    {[Github, Twitter, Linkedin, Mail].map((Icon, i) => (
-                        <a key={i} href="#" className="p-2 bg-zinc-900 rounded-full border border-white/10 text-white/70 hover:bg-lime hover:text-black hover:border-lime transition-all duration-300 hover:scale-110">
+                    {[
+                        { Icon: Github,   href: 'https://github.com/sagarluitel',    label: 'GitHub' },
+                        { Icon: Twitter,  href: 'https://x.com/sagarluitel',          label: 'Twitter' },
+                        { Icon: Linkedin, href: 'https://linkedin.com/in/sagarluitel', label: 'LinkedIn' },
+                        { Icon: Mail,     href: 'mailto:sagar.luitel.0909@gmail.com',  label: 'Email' },
+                    ].map(({ Icon, href, label }) => (
+                        <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" aria-label={label} className="p-2 bg-zinc-900 rounded-full border border-white/10 text-white/70 hover:bg-lime hover:text-black hover:border-lime transition-all duration-300 hover:scale-110">
                             <Icon size={16} />
                         </a>
                     ))}

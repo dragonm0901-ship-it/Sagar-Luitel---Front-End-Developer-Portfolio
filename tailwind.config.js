@@ -9,7 +9,7 @@ export default {
       colors: {
         background: "#000000",
         primary: "#ffffff",
-        lime: "#ccff00", // The signature Lime Green
+        lime: "var(--lime)", // The signature Lime Green
         secondary: "#888888",
       },
       fontFamily: {

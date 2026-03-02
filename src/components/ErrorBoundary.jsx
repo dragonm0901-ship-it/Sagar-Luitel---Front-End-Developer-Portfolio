@@ -10,8 +10,8 @@ class ErrorBoundary extends React.Component {
         return { hasError: true };
     }
 
-    componentDidCatch(error, errorInfo) {
-        console.log('3D Scene Error:', error, errorInfo);
+    componentDidCatch() {
+        // Errors are caught silently — 3D scene will show the fallback UI
     }
 
     render() {

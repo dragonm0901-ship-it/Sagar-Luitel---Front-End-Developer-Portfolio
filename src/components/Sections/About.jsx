@@ -1,7 +1,7 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Text, ContactShadows, Image, Environment, RoundedBox, OrbitControls } from '@react-three/drei';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 import * as THREE from 'three';
 import { easing } from 'maath';
 import gsap from 'gsap';
@@ -123,14 +123,15 @@ const About = () => {
     });
 
     const stack = [
-        { name: "React", url: "https://cdn.simpleicons.org/react/61DAFB" },
-        { name: "Three.js", url: "https://cdn.simpleicons.org/threedotjs/white" },
-        { name: "Next.js", url: "https://cdn.simpleicons.org/nextdotjs/white" },
-        { name: "Tailwind", url: "https://cdn.simpleicons.org/tailwindcss/06B6D4" },
-        { name: "GSAP", url: "https://cdn.simpleicons.org/greensock/88CE02" },
-        { name: "Figma", url: "https://cdn.simpleicons.org/figma/F24E1E" },
-        { name: "Node", url: "https://cdn.simpleicons.org/nodedotjs/339933" }, // Added more to fill shapes better
-        { name: "WebGL", url: "https://cdn.simpleicons.org/webgl/990000" }     // Added more to fill shapes better
+        { name: 'HTML',         url: '/icons/html.svg' },
+        { name: 'CSS',          url: '/icons/css.svg' },
+        { name: 'React',        url: '/icons/react.svg' },
+        { name: 'Three.js',     url: '/icons/threejs.svg' },
+        { name: 'Node.js',      url: '/icons/nodejs.svg' },
+        { name: 'Figma',        url: '/icons/figma.svg' },
+        { name: 'GSAP',         url: '/icons/gsap.svg' },
+        { name: 'Tailwind CSS', url: '/icons/tailwind.svg' },
+        { name: 'Lenis',        url: '/icons/lenis.svg' },
     ];
 
     return (
@@ -154,7 +155,7 @@ const About = () => {
                         </h2>
                         <div className="space-y-6 text-xl text-gray-400 font-light leading-relaxed">
                             <p>
-                                I am <span className="text-white font-bold">Sagar Luitel</span>, a Senior Frontend Developer obsessed with the <span className="text-lime">intersection of design and code</span>.
+                                I am <span className="text-white font-bold">Sagar Luitel</span>, a Frontend Developer obsessed with the <span className="text-lime">intersection of design and code</span>.
                             </p>
                             <p>
                                 My philosophy is simple: Digital experiences should feel <span className="italic text-white">alive</span>. They should respond, breathe, and captivate.
@@ -169,11 +170,11 @@ const About = () => {
 
                     <div className="grid grid-cols-2 gap-6">
                         <div className="p-6 border border-white/10 bg-white/5 rounded-2xl hover:border-lime/50 transition-colors group">
-                            <h3 className="text-4xl font-bold text-white mb-2 group-hover:text-lime transition-colors">5+</h3>
+                            <h3 className="text-4xl font-bold text-white mb-2 group-hover:text-lime transition-colors">2+</h3>
                             <p className="text-sm text-gray-500 uppercase tracking-wider">Years Experience</p>
                         </div>
                         <div className="p-6 border border-white/10 bg-white/5 rounded-2xl hover:border-lime/50 transition-colors group">
-                            <h3 className="text-4xl font-bold text-white mb-2 group-hover:text-lime transition-colors">50+</h3>
+                            <h3 className="text-4xl font-bold text-white mb-2 group-hover:text-lime transition-colors">20+</h3>
                             <p className="text-sm text-gray-500 uppercase tracking-wider">Projects Shipped</p>
                         </div>
                     </div>

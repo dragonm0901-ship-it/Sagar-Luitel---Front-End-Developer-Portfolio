@@ -1,84 +1,190 @@
-import React, { useState } from 'react';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Home, User, Briefcase, Mail } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { Home, User, Briefcase, Mail, Menu, X } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
+
+const NAV_ITEMS = [
+    { icon: Home,      href: '#',        label: 'Home'    },
+    { icon: Briefcase, href: '#work',    label: 'Work'    },
+    { icon: User,      href: '#about',   label: 'About'   },
+    { icon: Mail,      href: '#contact', label: 'Contact' },
+];
 
 const Header = () => {
+    const { themeColor } = useTheme();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { scrollY } = useScroll();
 
-    // Logic: When scrolled down > 50px, the header becomes "faded" (low opacity) unless hovered.
-    useMotionValueEvent(scrollY, "change", (latest) => {
-        setIsScrolled(latest > 50);
-    });
-
-    // Variants for the container width/height
-    const containerVariants = {
-        collapsed: {
-            width: '180px', // Tighter width for collapsed state
-            height: '50px',
-            borderRadius: '100px',
-            backgroundColor: 'rgba(24, 24, 27, 0.6)', // Less opaque when collapsed
-            transition: { type: "spring", stiffness: 300, damping: 30 }
-        },
-        expanded: {
-            width: '400px',
-            height: '80px',
-            borderRadius: '100px',
-            backgroundColor: 'rgba(24, 24, 27, 0.95)', // More opaque when active
-            transition: { type: "spring", stiffness: 300, damping: 30 }
-        }
-    };
+    useMotionValueEvent(scrollY, 'change', (v) => setIsScrolled(v > 50));
 
     return (
-        <motion.header
-            className="fixed top-8 left-1/2 -translate-x-1/2 z-50 pointer-events-auto"
+        <>
+            {/* ── DESKTOP: floating pill (sm and up, hidden on mobile) ── */}
+            <div className="fixed top-0 left-0 right-0 z-50 hidden sm:flex justify-center pointer-events-none"
+                 style={{ paddingTop: '28px' }}>
+                <motion.div
+                    className="pointer-events-auto"
+                    animate={{
+                        opacity: isScrolled && !isExpanded ? 0.28 : 1,
+                        scale:   isScrolled && !isExpanded ? 0.91  : 1,
+                    }}
+                    whileHover={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.25 }}
+                >
+                    <motion.div
+                        className="backdrop-blur-xl border border-white/10 overflow-hidden flex items-center justify-center"
+                        animate={{
+                            width:           isExpanded ? '400px' : '190px',
+                            height:          isExpanded ? '76px'  : '48px',
+                            borderRadius:    '100px',
+                            backgroundColor: isExpanded ? 'rgba(16,16,20,0.97)' : 'rgba(16,16,20,0.65)',
+                        }}
+                        transition={{ type: 'spring', stiffness: 340, damping: 32 }}
+                        onMouseEnter={() => setIsExpanded(true)}
+                        onMouseLeave={() => setIsExpanded(false)}
+                        style={{ boxShadow: `0 4px 40px ${themeColor}0d` }}
+                    >
+                        <nav className="flex items-center justify-center" style={{ gap: isExpanded ? '28px' : '6px' }}>
+                            {NAV_ITEMS.map((item) => (
+                                <a
+                                    key={item.label}
+                                    href={item.href}
+                                    className="relative group flex flex-col items-center justify-center rounded-full hover:bg-white/5 transition-colors"
+                                    style={{
+                                        padding: '6px 8px',
+                                        touchAction: 'manipulation',
+                                        textDecoration: 'none',
+                                        /* Do NOT set minHeight here — parent container controls height */
+                                    }}
+                                    onMouseEnter={e => {
+                                        if (isExpanded) e.currentTarget.querySelector('svg').style.color = themeColor;
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.querySelector('svg').style.color = '';
+                                    }}
+                                >
+                                    <item.icon
+                                        size={isExpanded ? 20 : 16}
+                                        style={{ transition: 'color 0.2s, width 0.2s, height 0.2s', color: 'rgba(255,255,255,0.72)' }}
+                                    />
+                                    <AnimatePresence>
+                                        {isExpanded && (
+                                            <motion.span
+                                                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                                animate={{ opacity: 0.55, height: 'auto', marginTop: 3 }}
+                                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="text-[9px] font-mono uppercase tracking-widest text-gray-400 leading-none block overflow-hidden"
+                                            >
+                                                {item.label}
+                                            </motion.span>
+                                        )}
+                                    </AnimatePresence>
+
+                                    {/* hover glow */}
+                                    <span
+                                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none blur-lg"
+                                        style={{ backgroundColor: `${themeColor}18` }}
+                                    />
+                                </a>
+                            ))}
+                        </nav>
+                    </motion.div>
+                </motion.div>
+            </div>
+
+            {/* ── MOBILE: Dynamic Island Navigation (Option A) ── */}
+            <div className="fixed bottom-6 left-0 right-0 z-50 sm:hidden flex justify-center pointer-events-none">
+                <MobileDynamicIsland navItems={NAV_ITEMS} themeColor={themeColor} />
+            </div>
+        </>
+    );
+};
+
+// Extracted Mobile Dynamic Island Component
+const MobileDynamicIsland = ({ navItems, themeColor }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef(null);
+
+    // Close when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setIsOpen(false);
+            }
+        };
+        if (isOpen) document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isOpen]);
+
+    return (
+        <motion.div
+            ref={containerRef}
+            className="pointer-events-auto overflow-hidden flex flex-col items-center justify-center p-2"
             animate={{
-                // If scrolled and NOT expanded, fade out. If expanded or top, full opacity.
-                opacity: (isScrolled && !isExpanded) ? 0.3 : 1,
-                y: 0,
-                scale: (isScrolled && !isExpanded) ? 0.9 : 1
+                width: isOpen ? '88vw' : '64px',
+                height: isOpen ? '72px' : '44px',
+                borderRadius: isOpen ? '24px' : '32px',
+                backgroundColor: isOpen ? 'rgba(12, 12, 16, 0.95)' : 'rgba(12, 12, 16, 0.8)',
             }}
-            whileHover={{ opacity: 1, scale: 1 }} // Always restore visibility on hover
-            transition={{ duration: 0.3 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+            style={{
+                backdropFilter: 'blur(20px)',
+                border: `1px solid ${isOpen ? themeColor + '60' : 'rgba(255,255,255,0.1)'}`,
+                boxShadow: isOpen
+                    ? `0 12px 40px ${themeColor}15, 0 4px 12px rgba(0,0,0,0.5)`
+                    : `0 4px 20px rgba(0,0,0,0.5)`,
+            }}
+            onClick={() => { if (!isOpen) setIsOpen(true); }}
         >
-            <motion.div
-                className="backdrop-blur-md border border-white/10 overflow-hidden flex items-center justify-center shadow-lg shadow-lime/5"
-                initial="collapsed"
-                animate={isExpanded ? "expanded" : "collapsed"}
-                variants={containerVariants}
-                onMouseEnter={() => setIsExpanded(true)}
-                onMouseLeave={() => setIsExpanded(false)}
-            >
-                <nav className="flex items-center justify-center w-full h-full" style={{ gap: isExpanded ? '32px' : '8px' }}>
-                    {/* Icons */}
-                    {[
-                        { icon: Home, href: "#", label: "Home" },
-                        { icon: User, href: "#about", label: "About" },
-                        { icon: Briefcase, href: "#work", label: "Work" },
-                        { icon: Mail, href: "#contact", label: "Contact" }
-                    ].map((item) => (
-                        <motion.a
-                            key={item.label}
-                            href={item.href}
-                            className="relative group p-2 flex items-center justify-center rounded-full hover:bg-white/5"
-                            animate={{
-                                opacity: isExpanded ? 1 : 0.7,
-                            }}
-                        >
-                            <item.icon
-                                size={isExpanded ? 24 : 18} // Smaller icons in collapsed state
-                                className={`transition-colors duration-300 ${isExpanded ? 'group-hover:text-lime group-hover:scale-110' : 'text-white/80'}`}
-                            />
-                            {/* Glow effect on hover when expanded */}
-                            {isExpanded && (
-                                <span className="absolute inset-0 bg-lime/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                            )}
-                        </motion.a>
-                    ))}
-                </nav>
-            </motion.div>
-        </motion.header>
+            <AnimatePresence mode="popLayout" initial={false}>
+                {!isOpen ? (
+                    // Closed State: Just a menu icon
+                    <motion.div
+                        key="closed"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex items-center justify-center w-full h-full cursor-pointer"
+                        style={{ color: 'rgba(255,255,255,0.8)' }}
+                    >
+                        <Menu size={18} aria-label="Open navigation menu" />
+                    </motion.div>
+                ) : (
+                    // Open State: Flex row of icons
+                    <motion.div
+                        key="open"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, delay: 0.1 }} // wait slightly for expansion
+                        className="flex justify-around items-center w-full h-full relative"
+                    >
+                        {navItems.map((item) => (
+                            <a
+                                key={item.label}
+                                href={item.href}
+                                onClick={(e) => {
+                                    setIsOpen(false);
+                                }}
+                                className="flex flex-col items-center justify-center flex-1 h-full pt-1"
+                                style={{
+                                    WebkitTapHighlightColor: 'transparent',
+                                    touchAction: 'manipulation',
+                                }}
+                            >
+                                <item.icon size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
+                                <span className="text-[9px] font-mono uppercase tracking-widest text-gray-400 mt-1">
+                                    {item.label}
+                                </span>
+                            </a>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 };
 
