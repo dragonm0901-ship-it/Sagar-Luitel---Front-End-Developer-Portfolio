@@ -46,7 +46,7 @@
      Use explicit padding/height per element instead. */
 
   .glass {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+    @apply bg-white/[0.02] backdrop-blur-[12px] border border-white/5 shadow-2xl;
   }
 
   .stroke-text {

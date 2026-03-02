@@ -1,41 +1,59 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
-import { Home, User, Briefcase, Mail, Menu, X } from 'lucide-react';
+import { Home, User, Briefcase, Mail, Menu, X, Clock, BookOpen } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 const NAV_ITEMS = [
-    { icon: Home,      href: '#',        label: 'Home'    },
-    { icon: Briefcase, href: '#work',    label: 'Work'    },
-    { icon: User,      href: '#about',   label: 'About'   },
-    { icon: Mail,      href: '#contact', label: 'Contact' },
+    { icon: Home,      href: '#',            label: 'Home'       },
+    { icon: Briefcase, href: '#work',        label: 'Work'       },
+    { icon: User,      href: '#about',       label: 'About'      },
+    { icon: Clock,     href: '#experience',  label: 'Experience' },
+    { icon: BookOpen,  href: '#blog',        label: 'Blog'       },
+    { icon: Mail,      href: '#contact',     label: 'Contact'    },
 ];
 
-const Header = () => {
+    const Header = () => {
     const { themeColor } = useTheme();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isHoveringZone, setIsHoveringZone] = useState(false);
     const { scrollY } = useScroll();
 
     useMotionValueEvent(scrollY, 'change', (v) => setIsScrolled(v > 50));
 
+    // Should the nav be visible?
+    const isNavVisible = !isScrolled || isHoveringZone || isExpanded;
+
     return (
         <>
             {/* ── DESKTOP: floating pill (sm and up, hidden on mobile) ── */}
-            <div className="fixed top-0 left-0 right-0 z-50 hidden sm:flex justify-center pointer-events-none"
-                 style={{ paddingTop: '28px' }}>
+
+            {/* Invisible hover trigger zone — always present at top */}
+            <div
+                className="fixed top-0 left-0 right-0 z-50 hidden sm:block"
+                style={{ height: '80px', pointerEvents: isScrolled ? 'auto' : 'none' }}
+                onMouseEnter={() => setIsHoveringZone(true)}
+                onMouseLeave={() => setIsHoveringZone(false)}
+            />
+
+            <div
+                className="fixed top-0 left-0 right-0 z-50 hidden sm:flex justify-center pointer-events-none"
+                style={{ paddingTop: '28px' }}
+                onMouseEnter={() => setIsHoveringZone(true)}
+                onMouseLeave={() => setIsHoveringZone(false)}
+            >
                 <motion.div
                     className="pointer-events-auto"
                     animate={{
-                        opacity: isScrolled && !isExpanded ? 0.28 : 1,
-                        scale:   isScrolled && !isExpanded ? 0.91  : 1,
+                        y: isNavVisible ? 0 : -80,
+                        opacity: isNavVisible ? 1 : 0,
                     }}
-                    whileHover={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
                     <motion.div
                         className="backdrop-blur-xl border border-white/10 overflow-hidden flex items-center justify-center"
                         animate={{
-                            width:           isExpanded ? '400px' : '190px',
+                            width:           isExpanded ? '520px' : '240px',
                             height:          isExpanded ? '76px'  : '48px',
                             borderRadius:    '100px',
                             backgroundColor: isExpanded ? 'rgba(16,16,20,0.97)' : 'rgba(16,16,20,0.65)',
@@ -55,7 +73,6 @@ const Header = () => {
                                         padding: '6px 8px',
                                         touchAction: 'manipulation',
                                         textDecoration: 'none',
-                                        /* Do NOT set minHeight here — parent container controls height */
                                     }}
                                     onMouseEnter={e => {
                                         if (isExpanded) e.currentTarget.querySelector('svg').style.color = themeColor;

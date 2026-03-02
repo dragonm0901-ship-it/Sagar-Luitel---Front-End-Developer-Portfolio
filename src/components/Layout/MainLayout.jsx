@@ -10,14 +10,16 @@ import Header from './Header';
 import Footer from './Footer';
 import Hero from '../Sections/Hero';
 import About from '../Sections/About';
+import Experience from '../Sections/Experience';
+import Blog from '../Sections/Blog';
 import EntranceOverlay from '../Overlay/EntranceOverlay';
+import ProjectCard from '../Cards/ProjectCard';
+import CustomCursor from '../Overlay/CustomCursor';
+import CaseStudyModal from '../Cards/CaseStudyModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
 // ── Cinematic iris-close transition overlay ───────────────────────────────────
-// Fires once when isEntered transitions false → true.
-// A filled circle (theme color) shrinks from full-screen to nothing,
-// revealing the hero like a camera iris pulling open.
 const CinematicTransition = ({ color }) => (
     <motion.div
         className="fixed inset-0 pointer-events-none z-[45]"
@@ -49,6 +51,9 @@ const MainLayout = () => {
     const { isEntered, themeColor } = useTheme();
     const container    = useRef();
     const horizontalSection = useRef();
+
+    // Case study modal state
+    const [activeCaseStudy, setActiveCaseStudy] = useState(null);
 
     // Track first-ever entry to trigger cinematic effect exactly once
     const [showCinematic, setShowCinematic] = useState(false);
@@ -85,6 +90,9 @@ const MainLayout = () => {
 
     return (
         <ReactLenis root>
+            {/* Custom Difference Cursor */}
+            <CustomCursor />
+
             {/* Scroll gating — stops Lenis while entry overlay is active */}
             <LenisController isEntered={isEntered} />
 
@@ -95,7 +103,6 @@ const MainLayout = () => {
             >
                 {/* Entry overlay */}
                 <EntranceOverlay />
-
 
                 {/* ── Cinematic iris-close transition ── */}
                 <AnimatePresence>
@@ -128,64 +135,38 @@ const MainLayout = () => {
                         </div>
 
                         {/* Project A — NEON */}
-                        <div className="horizontal-slide w-full min-h-[60vh] md:w-screen md:h-full flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 glass relative group p-6 md:p-0">
-                            <div className="w-full md:w-[70%] h-full md:h-[60%] bg-zinc-900 border border-white/10 p-6 md:p-10 flex flex-col justify-between hover:border-lime/50 transition-colors duration-500 rounded-2xl md:rounded-none">
-                                <div className="flex justify-between items-start mb-10 md:mb-0">
-                                    <span className="text-6xl md:text-9xl font-black text-white/5 group-hover:text-lime/10 transition-colors">01</span>
-                                    <div className="flex gap-2 flex-wrap justify-end">
-                                        <span className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase">React</span>
-                                        <span className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase">WebGL</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="text-5xl md:text-8xl font-black group-hover:text-lime transition-colors duration-300">NEON</h3>
-                                    <p className="text-lg md:text-2xl mt-4 text-gray-400 max-w-xl group-hover:text-white transition-colors">
-                                        A cyberpunk inspired e-commerce experience featuring real-time 3D product customization.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <ProjectCard
+                            index="01"
+                            title="NEON"
+                            description="A cyberpunk inspired e-commerce experience featuring real-time 3D product customization."
+                            tags={['React', 'WebGL']}
+                            onViewCaseStudy={setActiveCaseStudy}
+                        />
 
                         {/* Project B — VELOCITY */}
-                        <div className="horizontal-slide w-full min-h-[60vh] md:w-screen md:h-full flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 glass group p-6 md:p-0">
-                            <div className="w-full md:w-[70%] h-full md:h-[60%] bg-zinc-900 border border-white/10 p-6 md:p-10 flex flex-col justify-between hover:border-lime/50 transition-colors duration-500 rounded-2xl md:rounded-none">
-                                <div className="flex justify-between items-start mb-10 md:mb-0">
-                                    <span className="text-6xl md:text-9xl font-black text-white/5 group-hover:text-lime/10 transition-colors">02</span>
-                                    <div className="flex gap-2 flex-wrap justify-end">
-                                        <span className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase">Next.js</span>
-                                        <span className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase">GSAP</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="text-5xl md:text-8xl font-black group-hover:text-lime transition-colors duration-300">VELOCITY</h3>
-                                    <p className="text-lg md:text-2xl mt-4 text-gray-400 max-w-xl group-hover:text-white transition-colors">
-                                        High-performance automotive showcase with scroll-driven car configurator.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <ProjectCard
+                            index="02"
+                            title="VELOCITY"
+                            description="High-performance automotive showcase with scroll-driven car configurator."
+                            tags={['Next.js', 'GSAP']}
+                            onViewCaseStudy={setActiveCaseStudy}
+                        />
 
                         {/* Project C — AETHER */}
-                        <div className="horizontal-slide w-full min-h-[60vh] md:w-screen md:h-full flex items-center justify-center glass group p-6 md:p-0">
-                            <div className="w-full md:w-[70%] h-full md:h-[60%] bg-zinc-900 border border-white/10 p-6 md:p-10 flex flex-col justify-between hover:border-lime/50 transition-colors duration-500 rounded-2xl md:rounded-none">
-                                <div className="flex justify-between items-start mb-10 md:mb-0">
-                                    <span className="text-6xl md:text-9xl font-black text-white/5 group-hover:text-lime/10 transition-colors">03</span>
-                                    <div className="flex gap-2 flex-wrap justify-end">
-                                        <span className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase">Three.js</span>
-                                        <span className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase">Physics</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="text-5xl md:text-8xl font-black group-hover:text-lime transition-colors duration-300">AETHER</h3>
-                                    <p className="text-lg md:text-2xl mt-4 text-gray-400 max-w-xl group-hover:text-white transition-colors">
-                                        Interactive generative art installation utilizing complex particle systems and audio reactivity.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <ProjectCard
+                            index="03"
+                            title="AETHER"
+                            description="Interactive generative art installation utilizing complex particle systems and audio reactivity."
+                            tags={['Three.js', 'Physics']}
+                            onViewCaseStudy={setActiveCaseStudy}
+                        />
                     </section>
 
                     <About />
+
+                    <Experience />
+
+                    <Blog />
 
                     <section id="contact" className="min-h-[50vh] flex flex-col items-center justify-center bg-lime text-black relative z-10 py-16 md:py-20">
                         <h2 className="text-5xl md:text-[8rem] font-black mb-6 md:mb-8 tracking-tighter text-center leading-none">
@@ -213,6 +194,14 @@ const MainLayout = () => {
 
                 <Footer />
             </div>
+
+            {/* Case Study Modal */}
+            <CaseStudyModal
+                projectTitle={activeCaseStudy}
+                isOpen={!!activeCaseStudy}
+                onClose={() => setActiveCaseStudy(null)}
+                themeColor={themeColor}
+            />
         </ReactLenis>
     );
 };
