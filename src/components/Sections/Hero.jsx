@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, ArrowUpRight, Download } from 'lucide-react';
+import { Github, Linkedin, ArrowUpRight, Download, BookOpen } from 'lucide-react';
 import ConstellationCanvas from '../Effects/ConstellationCanvas';
 import MorphingText from '../Effects/MorphingText';
 import MonochromeBloomPortrait from '../Effects/MonochromeBloomPortrait';
@@ -19,7 +20,7 @@ const isTouchDevice = () =>
 
 
 // ── Magnetic Interactions ──────────────────────────────────────────────────────────────
-const MagneticCTA = ({ href, target, rel, download, icon: Icon, children, themeColor, primary }) => {
+const MagneticCTA = ({ href, target, rel, download, icon: Icon, children, themeColor, primary, onClick }) => {
     const ref = useRef(null);
     const x = useMotionValue(0);
     const y = useMotionValue(0);
@@ -41,6 +42,7 @@ const MagneticCTA = ({ href, target, rel, download, icon: Icon, children, themeC
             target={target}
             rel={rel}
             download={download}
+            onClick={onClick}
             onMouseMove={onMove} 
             onMouseLeave={onLeave} 
             whileTap={{ scale: 0.96 }}
@@ -133,6 +135,7 @@ const RoleCycler = ({ themeColor }) => {
 // ── Hero ──────────────────────────────────────────────────────────────────────
 const Hero = () => {
     const { themeColor } = useTheme();
+    const navigate = useNavigate();
 
     return (
         <section
@@ -207,11 +210,20 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 1 }}
-                    className="flex flex-col sm:flex-row items-center gap-6 justify-center"
+                    className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center"
                 >
-                    <MagneticCTA href="#work" icon={ArrowUpRight} themeColor={themeColor} primary>
-                        View Projects
-                    </MagneticCTA>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <MagneticCTA href="#work" icon={ArrowUpRight} themeColor={themeColor} primary>
+                            View Projects
+                        </MagneticCTA>
+                        
+                        <MagneticCTA href="/courses" icon={BookOpen} themeColor={themeColor} primary={false} onClick={(e) => {
+                            e.preventDefault();
+                            navigate('/courses');
+                        }}>
+                            View Courses
+                        </MagneticCTA>
+                    </div>
 
                     <div className="flex gap-4">
                         <MagneticSocial href="https://github.com/sagarluitel" icon={Github} themeColor={themeColor} />
