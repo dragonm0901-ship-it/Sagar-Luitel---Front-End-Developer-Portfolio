@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
-import { Home, User, Briefcase, Mail, Menu, X, Clock, BookOpen } from 'lucide-react';
+import { Home, User, Briefcase, Mail, Menu, X, Clock, BookOpen, Code2 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 const NAV_ITEMS = [
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
     { icon: User,      href: '#about',       label: 'About'      },
     { icon: Clock,     href: '#experience',  label: 'Experience' },
     { icon: BookOpen,  href: '#blog',        label: 'Blog'       },
+    { icon: Code2,     href: '#lab',         label: 'Lab'        },
     { icon: Mail,      href: '#contact',     label: 'Contact'    },
 ];
 
@@ -53,7 +54,7 @@ const NAV_ITEMS = [
                     <motion.div
                         className="backdrop-blur-xl border border-white/10 overflow-hidden flex items-center justify-center"
                         animate={{
-                            width:           isExpanded ? '520px' : '240px',
+                            width:           isExpanded ? '580px' : '280px',
                             height:          isExpanded ? '76px'  : '48px',
                             borderRadius:    '100px',
                             backgroundColor: isExpanded ? 'rgba(16,16,20,0.97)' : 'rgba(16,16,20,0.65)',

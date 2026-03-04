@@ -305,9 +305,11 @@ const EntranceOverlay = () => {
 
                         {/* ── MIDDLE: Cards ── */}
                         <div className="relative z-10 w-full flex items-center justify-center px-4 py-8 sm:py-6 pb-20 sm:pb-24 min-h-[300px]">
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 justify-items-center w-full max-w-[860px]">
+                            {/* Flex layout enables a perfect 3-top, 2-bottom split when max-width forces wrapping, 
+                                and degrades beautifully to 2-top, 2-middle, 1-bottom on narrow mobile screens */}
+                            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full max-w-[560px] md:max-w-[700px]">
                                 {COLORS.map((color) => (
-                                    <div key={color.name} className={`${color.name === 'Matrix Green' ? 'col-span-2 md:col-span-1 flex justify-center w-full' : ''}`}>
+                                    <div key={color.name} className="flex-shrink-0">
                                         <CodeCard
                                             color={color}
                                             isActive={themeColor === color.hex}

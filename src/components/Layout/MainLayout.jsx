@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
+import WebGLGlitchTransition from '../Effects/WebGLGlitchTransition';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -12,6 +13,7 @@ import Hero from '../Sections/Hero';
 import About from '../Sections/About';
 import Experience from '../Sections/Experience';
 import Blog from '../Sections/Blog';
+import Lab from '../Sections/Lab';
 import EntranceOverlay from '../Overlay/EntranceOverlay';
 import ProjectCard from '../Cards/ProjectCard';
 import CustomCursor from '../Overlay/CustomCursor';
@@ -19,19 +21,7 @@ import CaseStudyModal from '../Cards/CaseStudyModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Cinematic iris-close transition overlay ───────────────────────────────────
-const CinematicTransition = ({ color }) => (
-    <motion.div
-        className="fixed inset-0 pointer-events-none z-[45]"
-        initial={{ clipPath: 'circle(120% at 50% 50%)', opacity: 1 }}
-        animate={{ clipPath: 'circle(0% at 50% 50%)',   opacity: 0.85 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1] }}
-        style={{
-            background: `radial-gradient(circle, ${color}ee 0%, ${color}aa 35%, #08080a 100%)`,
-        }}
-    />
-);
+// cinematic transition replaced with WebGLGlitchTransition
 
 // Stop/start Lenis scroll based on overlay state
 const LenisController = ({ isEntered }) => {
@@ -63,7 +53,9 @@ const MainLayout = () => {
         if (isEntered && !hasEnteredRef.current) {
             hasEnteredRef.current = true;
             setShowCinematic(true);
-            const t = setTimeout(() => setShowCinematic(false), 1100);
+            // The unmount of the Cinematic effect is now handled internally by Framer Motion on exit, 
+            // but we use a timeout to remove it from the DOM.
+            const t = setTimeout(() => setShowCinematic(false), 1500);
             return () => clearTimeout(t);
         }
     }, [isEntered]);
@@ -104,9 +96,9 @@ const MainLayout = () => {
                 {/* Entry overlay */}
                 <EntranceOverlay />
 
-                {/* ── Cinematic iris-close transition ── */}
+                {/* ── Cinematic WebGL Glitch transition ── */}
                 <AnimatePresence>
-                    {showCinematic && <CinematicTransition key="cinematic" color={themeColor} />}
+                    {showCinematic && <WebGLGlitchTransition key="cinematic" color={themeColor} onComplete={() => setShowCinematic(false)} />}
                 </AnimatePresence>
 
                 {/* Navbar */}
@@ -167,6 +159,8 @@ const MainLayout = () => {
                     <Experience />
 
                     <Blog />
+
+                    <Lab />
 
                     <section id="contact" className="min-h-[50vh] flex flex-col items-center justify-center bg-lime text-black relative z-10 py-16 md:py-20">
                         <h2 className="text-5xl md:text-[8rem] font-black mb-6 md:mb-8 tracking-tighter text-center leading-none">

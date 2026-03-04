@@ -37,7 +37,10 @@ const MonochromeBloomPortrait = ({ imageUrl, themeColor }) => {
             onMouseLeave={() => setIsHovered(false)}
             style={{ touchAction: 'none' }} // Prevent scrolling when tracking on touch devices
         >
-            <div className="relative w-64 h-64 md:w-80 md:h-80 select-none pointer-events-none">
+            <div 
+                className="relative w-72 h-72 md:w-96 md:h-96 select-none pointer-events-none mt-8 md:mt-12"
+                data-cursor-exclude="true" // Used by CustomCursor to disable mix-blend-mode
+            >
                 
                 {/* 1. Base Layer: Moody Monochrome */}
                 <img 
