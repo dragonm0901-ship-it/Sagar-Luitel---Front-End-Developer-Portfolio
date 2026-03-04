@@ -1,233 +1,157 @@
-export const threeJsCourse = {
+export const threeJs = {
     id: "three-js",
-    title: "Creative Coding with Three.js",
-    description: "Bring the web to life in 3D. Learn Scenes, Cameras, React Three Fiber (R3F), and custom GLSL Vertex & Fragment Shaders.",
+    title: "Three.js Creative Coding: The 20-Phase Epic",
+    description: "Build immersive, GPU-accelerated 3D worlds. Master the WebGL renderer, Quaternion math for complex rotations, React Three Fiber, and custom GLSL Shaders.",
     image: "/courses/three_js.png",
-    tags: ["Three.js", "WebGL", "GLSL", "React Three Fiber"],
-    duration: "40 Chapters",
+    tags: ["WebGL", "Three.js", "React Three Fiber", "Shaders", "Epic"],
+    duration: "100 Chapters (Creative Director Level)",
     level: "Advanced",
     modules: [
+        // THE 3D ENGINE (PHASES 1-5)
         {
             id: "phase1",
-            title: "Phase 1: Getting Started in 3D",
+            title: "Phase 1: The Geometry Pipeline",
             pages: [
-                {
-                    id: "scene-camera-renderer",
-                    title: "The Holy Trinity of 3D",
-                    content: `
-# Welcome to WebGL
-
-Three.js is a library that drastically simplifies the process of writing raw WebGL (a JavaScript API for rendering high-performance interactive 3D and 2D graphics). 
-
-To render anything in Three.js, you absolutely must have three foundational pillars: **A Scene, a Camera, and a Renderer.**
-
-## 1. The Scene
-Think of the scene as an empty universe. It's the container where you will place your objects, lights, and cameras.
-
-\`\`\`javascript
-import * as THREE from 'three';
-const scene = new THREE.Scene();
-\`\`\`
-
-## 2. The Camera
-The camera is the "eye". What the camera sees is what gets drawn to the screen. 
-
-\`\`\`javascript
-// Parameters: Field of View, Aspect Ratio, Near Clipping, Far Clipping
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-// Move the camera back 5 units on the Z axis so we can see the center (0,0,0)
-camera.position.z = 5; 
-\`\`\`
-
-## 3. The Renderer
-The renderer acts as the film projector. It calculates everything and paints it onto an HTML \`<canvas>\` element.
-
-\`\`\`javascript
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-// Inject the magical canvas into the web page
-document.body.appendChild(renderer.domElement);
-\`\`\`
-                    `
-                },
-                {
-                    id: "meshes-materials",
-                    title: "Meshes, Geometries, and Materials",
-                    content: `
-# Building Objects
-
-An object in Three.js is called a **Mesh**. A Mesh is composed of two things:
-1. **Geometry:** The mathematical skeleton/shape (e.g., a sphere, a box).
-2. **Material:** The skin that wraps the skeleton (e.g., color, texture, reflectiveness).
-
-## Creating a Spinning Cube
-
-\`\`\`javascript
-// 1. Create the Skeleton (Width, Height, Depth)
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-
-// 2. Create the Skin (MeshBasicMaterial doesn't require lighting)
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-
-// 3. Combine them into a Mesh
-const cube = new THREE.Mesh(geometry, material);
-
-// 4. Add the Cube to our Scene
-scene.add(cube);
-\`\`\`
-
-If we stopped here, we would just see a static green square. To make it a true 3D experience, we need an Animation Loop.
-
-\`\`\`javascript
-function animate() {
-    requestAnimationFrame(animate);
-
-    // Rotate the cube on every frame
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-
-    // Finally, render the scene through the camera
-    renderer.render(scene, camera);
-}
-// Start the loop!
-animate();
-\`\`\`
-                    `
-                }
+                { id: "vertices-faces", title: "Connecting the Dots", content: "# What is a 3D Model?\n\nThe GPU only understands Triangles. A `BufferGeometry` is essentially a massive Float32Array containing `[x, y, z]` coordinates (Vertices). Every 3 vertices are connected to form a single Face (a Triangle). A high-poly character model is simply 100,000 tiny triangles." }
             ]
         },
         {
             id: "phase2",
-            title: "Phase 2: React Three Fiber (R3F)",
+            title: "Phase 2: Vectors & Matrices",
             pages: [
-                {
-                    id: "declarative-3d",
-                    title: "Declarative WebGL in React",
-                    content: `
-# Wrapping Three.js in Components
-
-Writing raw Three.js involves hundreds of lines of imperative setup code. **React Three Fiber (R3F)** is a custom React renderer that allows you to write Three.js using declarative JSX.
-
-Because it is natively React, you get all the benefits of component state, props, hooks, and lifecycle management applied *directly* to 3D meshes!
-
-## The Canvas Element
-
-Instead of manually creating a \`Scene\`, \`Camera\`, and \`Renderer\`, R3F provides a \`<Canvas>\` component that does it all automatically.
-
-\`\`\`tsx
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
-
-// A Reusable 3D Component!
-function InteractiveBox(props) {
-  // This reference will give us direct access to the mesh
-  const meshRef = useRef();
-  
-  // Set up local React state for hover and click events
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-
-  // useFrame executes roughly 60 times per second (Replaces requestAnimationFrame)
-  useFrame((state, delta) => {
-    meshRef.current.rotation.x += delta;
-    meshRef.current.rotation.y += delta;
-  });
-
-  return (
-    <mesh
-      {...props}
-      ref={meshRef}
-      scale={active ? 1.5 : 1}
-      onClick={() => setActive(!active)}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}>
-      
-      {/* Declarative Geometry & Material */}
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-  );
-}
-
-export default function App() {
-  return (
-    <div style={{ width: "100vw", height: "100vh" }}>
-        <!-- The Canvas automatically builds the WebGL Environment -->
-        <Canvas>
-            <ambientLight intensity={Math.PI / 2} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-            <InteractiveBox position={[-1.2, 0, 0]} />
-            <InteractiveBox position={[1.2, 0, 0]} />
-        </Canvas>
-    </div>
-  )
-}
-\`\`\`
-                    `
-                }
+                { id: "matrix-math", title: "Translation, Rotation, Scale", content: "# The Master Equation\n\nA Vector3 holds position `x,y,z`. But when you rotate and scale an object simultaneously, you must multiply Matrices (4x4 grids of numbers). You don't write the math yourself, but you must understand that `object.updateMatrix()` is mathematically heavy." }
             ]
         },
         {
             id: "phase3",
-            title: "Phase 3: The Dark Arts (GLSL Shaders)",
+            title: "Phase 3: Quaternions",
             pages: [
-                {
-                    id: "intro-shaders",
-                    title: "Vertex & Fragment Shaders",
-                    content: `
-# Taking Control of the GPU
-
-Eventually, standard materials won't be enough. You will want to create a flowing ocean, a liquid lava lamp, or a black hole distortion effect. To do this, you must write **Shaders**.
-
-Shaders are tiny C-like programs written in **GLSL** (Graphics Library Shader Language) that run directly on the user's Graphics Card (GPU), allowing them to calculate millions of pixels in parallel.
-
-## 1. The Vertex Shader
-The Vertex Shader's only job is to calculate the final X, Y, Z position of every single vertice in your geometry on the screen.
-
-If you pass a \`time\` uniform variable into the Vertex shader and apply a \`sin()\` wave to the Y coordinates, your mesh will appear to "breathe" or undulate like a flag in the wind.
-
-## 2. The Fragment Shader
-Once the vertices are positioned, the Fragment Shader's only job is to determine the exact **color** (R, G, B, A) of every single pixel caught *between* those vertices.
-
-\`\`\`glsl
-// A beautiful, glowing Fragment Shader
-uniform float uTime;
-varying vec2 vUv;
-
-void main() {
-    // Generate a color based on the pixel's coordinate and the passing of time
-    vec3 color = vec3(
-        abs(sin(vUv.x + uTime * 2.0)),
-        abs(cos(vUv.y + uTime)),
-        0.5
-    );
-    
-    // gl_FragColor is the final output to the screen
-    gl_FragColor = vec4(color, 1.0);
-}
-\`\`\`
-                    `
-                }
+                { id: "gimbal-lock", title: "Solving Gimbal Lock", content: "# Why Euler Angles Fail\n\nRotating a spaceship using standard `rotation.x += 10` (Euler Angles) will eventually cause two axes to align perfectly, causing the ship to violently flip out of control (Gimbal Lock). Quaternions use 4-dimensional complex math to calculate rotation immutably and perfectly." }
             ]
         },
         {
-            id: "project",
-            title: "Capstone: The Shader Portfolio",
+            id: "phase4",
+            title: "Phase 4: The Render Loop",
             pages: [
-                {
-                    id: "shader-spec",
-                    title: "Milestone: Raymarching Engine",
-                    content: `
-# Raw Mathematics
+                { id: "request-animation-frame", title: "Delta Time Multipliers", content: "# Physics independent of Framerate\n\nIf you move a cube `10px` every frame, a 144Hz monitor user will see the cube fly across the screen 2.5x faster than a 60Hz user. You must use `requestAnimationFrame` to calculate `deltaTime` (time since last frame), and multiply all physics by `deltaTime`." }
+            ]
+        },
+        {
+            id: "phase5",
+            title: "Phase 5: Cameras & Projections",
+            pages: [
+                { id: "perspective-orthographic", title: "FOV and Frustum", content: "# How we see the world\n\nA `PerspectiveCamera` mimics the human eye (objects shrink as they get further away, based on a Field of View angle). An `OrthographicCamera` ignores depth entirely (objects stay the exact same size regardless of distance), used heavily for 2D isometric games like SimCity." }
+            ]
+        },
 
-You will build a full-screen, high-performance visual experience using a \`ShaderMaterial\`.
+        // REALISM & PERFORMANCE (PHASES 6-10)
+        {
+            id: "phase6",
+            title: "Phase 6: Lighting Architectures",
+            pages: [
+                { id: "pbr-materials", title: "Physically Based Rendering", content: "# Bouncing Photons\n\n`MeshStandardMaterial` uses an industry-standard PBR algorithm. Instead of just picking a color, you define `metalness` (how much the light reflects cleanly) and `roughness` (how much the microscopic surface diffuses the light). Together, they can mathematically simulate anything from plastic to gold." }
+            ]
+        },
+        {
+            id: "phase7",
+            title: "Phase 7: Shadow Mapping",
+            pages: [
+                { id: "shadow-cameras", title: "The Hidden Render", content: "# Shadows are Expensive\n\nTo cast a shadow, Three.js secretly places a camera at the light source, renders the entire scene from the light's perspective to see what is blocked, creates an image (Shadow Map), and overlays it. High-resolution shadows murder framerates. You must bake them when possible." }
+            ]
+        },
+        {
+            id: "phase8",
+            title: "Phase 8: Raycasting",
+            pages: [
+                { id: "mouse-picking", title: "Clicking a 3D Object", content: "# The Invisible Laser\n\nYou cannot add an `onClick` listener to a 3D mesh. You must project an invisible 3D laser out of the camera, tracking exactly where your 2D mouse coordinates lie, and mathematically calculate if that invisible line intersects with any triangles in the scene." }
+            ]
+        },
+        {
+            id: "phase9",
+            title: "Phase 9: Loading Assets",
+            pages: [
+                { id: "gltf-draco", title: "The JPEG of 3D", content: "# GLTF and Draco Compression\n\nNever use `.obj` or `.fbx` on the web (their filesize is massive). Google dictates the `.gltf` format (JSON based 3D). If the model is over 5MB, you must run it through Draco Compression, physically reconstructing the binary geometry on the user's CPU upon load." }
+            ]
+        },
+        {
+            id: "phase10",
+            title: "Phase 10: Performance Optimization",
+            pages: [
+                { id: "instanced-mesh", title: "100,000 Cubes", content: "# Draw Calls\n\nTelling the GPU to draw a cube takes 1 'Draw Call'. Doing this 100,000 times natively drops the game to 1 FPS. `InstancedMesh` sends the geometry to the GPU exactly ONE time, and simply sends a cheap Float32Array of 100,000 positions, effortlessly holding 60 FPS." }
+            ]
+        },
 
-## Requirements
-1. **React Three Fiber:** Setup an R3F \`<Canvas>\` with a single, massive \`<planeGeometry>\` that stretches across the entire screen.
-2. **Uniforms Integration:** Write a \`useFrame\` loop that passes the \`mouse\` coordinates and a constantly incrementing \`time\` delta straight into your Custom Shader Material's \`uniforms\` object.
-3. **The Fragment Shader:** Write a complex Fragment shader that utilizes Perlin Noise to generate a dynamic, glowing, liquid-like background that reacts and ripples when the user moves their mouse.
-                    `
-                }
+        // REACT THREE FIBER (PHASES 11-15)
+        {
+            id: "phase11",
+            title: "Phase 11: Declarative 3D",
+            pages: [
+                { id: "r3f-benefits", title: "Why R3F saves time", content: "# Killing the Boilerplate\n\nVanilla Three.js requires 50 lines of code just to show a box on screen. React Three Fiber (R3F) treats 3D objects as standard React JSX Components. It auto-magically manages the WebGL Context, the Resize Observer, the Render Loop, and the Canvas unmounting." }
+            ]
+        },
+        {
+            id: "phase12",
+            title: "Phase 12: The 'useFrame' Hook",
+            pages: [
+                { id: "component-loops", title: "Injecting into the Render Loop", content: "# Distributed Physics\n\nIn Vanilla JS, you have one massive animation loop at the bottom of the file handling 50 different objects. In R3F, a tiny `<Asteroid>` component uses `useFrame((state, delta) => {})` to manage its own rotation internally. It subscribes itself to the master loop automatically." }
+            ]
+        },
+        {
+            id: "phase13",
+            title: "Phase 13: R3F Events",
+            pages: [
+                { id: "declarative-raycasting", title: "onClick on a Sphere", content: "# Built-in Interactivity\n\nR3F abstracts the brutal math of Raycasting away entirely. You simply attach `<mesh onClick={() => hit()} onPointerOver={() => hover()} />` as if it were a standard HTML `<div>`." }
+            ]
+        },
+        {
+            id: "phase14",
+            title: "Phase 14: The Drei Ecosystem",
+            pages: [
+                { id: "pmndrs-drei", title: "Incredible Helpers", content: "# Advanced Features for Free\n\nThe `@react-three/drei` library provides components like `<Environment>` (which instantly lights your scene using HDRI global illumination), `<OrbitControls>`, and `<Html>` (which perfectly maps flat CSS DOM elements over 3D coordinates)." }
+            ]
+        },
+        {
+            id: "phase15",
+            title: "Phase 15: Post-Processing",
+            pages: [
+                { id: "bloom-dof", title: "Making it Cinematic", content: "# The Final Polish\n\nOnce the scene is rendered perfectly, Post-Processing grabs that final image and runs 2D filters over it right before the user sees it. This gives you access to ultra-realistic Bloom, Depth of Field (Background Blur), Vignette, and Chromatic Aberration." }
+            ]
+        },
+
+        // RAW GLSL SHADERS (PHASES 16-20)
+        {
+            id: "phase16",
+            title: "Phase 16: The Shader Pipeline",
+            pages: [
+                { id: "vertex-fragment", title: "C is for Compute", content: "# Talking to the GPU\n\nTo build fire or water, Javascript is too slow. You must write **GLSL** (Graphics Library Shader Language). You write two 'Shader' programs: A Vertex Shader (manipulating exactly *where* the triangle corners are) and a Fragment Shader (calculating exactly *what color* the pixels are)." }
+            ]
+        },
+        {
+            id: "phase17",
+            title: "Phase 17: Uniforms and Attributes",
+            pages: [
+                { id: "passing-data", title: "Bridging the CPU and GPU", content: "# Sending variables across\n\nA `Uniform` is a global variable you send from JS to the GPU (like `uTime` to animate waves continuously). An `Attribute` is local data specific to a single Vertex (like a UV coordinate used for texture wrapping)." }
+            ]
+        },
+        {
+            id: "phase18",
+            title: "Phase 18: Shader Material in R3F",
+            pages: [
+                { id: "custom-materials", title: "Injecting the Code", content: "# React meets C\n\nYou inject your GLSL code using the `<shaderMaterial />` component. You pass your uniforms in as a React prop, allowing you to use `useFrame` to constantly update `material.current.uniforms.uTime.value`, causing your shader to dance perfectly in sync with React." }
+            ]
+        },
+        {
+            id: "phase19",
+            title: "Phase 19: Noise Algorithms",
+            pages: [
+                { id: "simplex-perlin", title: "Organic Randomness", content: "# Controlling the Chaos\n\nStandard `Math.random()` generates TV static (useless). Simplex/Perlin Noise generates smooth, continuous, organic waves perfectly suited for simulating Mountain Ranges, Ocean swells, or Wood grains mathematically without requiring image textures." }
+            ]
+        },
+        {
+            id: "phase20",
+            title: "Phase 20: Frame Buffer Objects (FBO)",
+            pages: [
+                { id: "gpgpu-compute", title: "Using the GPU for Math", content: "# Ping-Ponging State\n\nIf you want to simulate 1 Million particles with gravity and wind, the GPU cannot 'remember' where a particle was on the previous frame. FBO Ping-Ponging renders the mathematical output of the GPU *to a hidden texture*, and feeds it back into the GPU on the next frame as input." }
             ]
         }
     ]

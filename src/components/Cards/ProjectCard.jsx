@@ -58,7 +58,7 @@ const ProjectCard = ({ index, title, description, tags, onViewCaseStudy }) => {
                         background: useMotionTemplate`
                             radial-gradient(
                                 800px circle at ${mouseX}px ${mouseY}px,
-                                rgba(204, 255, 0, 0.12),
+                                var(--primary-color),
                                 transparent 40%
                             )
                         `,
@@ -71,19 +71,22 @@ const ProjectCard = ({ index, title, description, tags, onViewCaseStudy }) => {
                     style={{ transform: "translateZ(60px)" }}
                 >
                     <div className="flex justify-between items-start mb-10 md:mb-0">
-                        <span className="text-6xl md:text-9xl font-black text-white/5 group-hover:text-lime/15 transition-colors duration-500">
+                        <span className="text-6xl md:text-9xl font-black text-white/5 transition-colors duration-500" style={{ color: 'var(--primary-color)', opacity: 0.15 }}>
                             {index}
                         </span>
                         <div className="flex gap-2 flex-wrap justify-end">
                             {tags.map((tag, i) => (
-                                <span key={i} className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase bg-black/50 backdrop-blur-md group-hover:border-lime/40 group-hover:text-lime transition-colors duration-300">
+                                <span key={i} className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase bg-black/50 backdrop-blur-md transition-colors duration-300" 
+                                      style={{ '--tw-text-opacity': 1 }} 
+                                      onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--primary-color)'; e.currentTarget.style.borderColor = 'var(--primary-color)' }}
+                                      onMouseLeave={(e) => { e.currentTarget.style.color = ''; e.currentTarget.style.borderColor = '' }}>
                                     {tag}
                                 </span>
                             ))}
                         </div>
                     </div>
                     <div>
-                        <h3 className="text-5xl md:text-8xl font-black group-hover:text-lime transition-colors duration-300 drop-shadow-2xl">
+                        <h3 className="text-5xl md:text-8xl font-black transition-colors duration-300 drop-shadow-2xl hover:text-[var(--primary-color)]">
                             {title}
                         </h3>
                         <p className="text-lg md:text-2xl mt-4 text-gray-400 max-w-xl group-hover:text-white transition-colors duration-300">
@@ -92,7 +95,7 @@ const ProjectCard = ({ index, title, description, tags, onViewCaseStudy }) => {
                         {onViewCaseStudy && (
                             <button
                                 onClick={() => onViewCaseStudy(title)}
-                                className="mt-6 text-sm font-mono font-bold uppercase tracking-wider text-gray-500 hover:text-lime transition-colors interactive-hover group/btn flex items-center gap-2"
+                                className="mt-6 text-sm font-mono font-bold uppercase tracking-wider text-gray-500 hover:text-[var(--primary-color)] transition-colors interactive-hover group/btn flex items-center gap-2"
                             >
                                 View Case Study
                                 <span className="inline-block group-hover/btn:translate-x-1 transition-transform">→</span>

@@ -1,296 +1,231 @@
 export const webFoundations = {
     id: "web-foundations",
-    title: "Web Dev Foundations",
-    description: "The absolute ground floor. Master Semantic HTML, the CSS Box Model, Flexbox/Grid architectures, modern Browser APIs, and Asynchronous JavaScript.",
+    title: "Web Foundations: The 30-Phase Epic",
+    description: "From the physical undersea cables to compiling WebAssembly. The most exhaustive, microscopic breakdown of the internet, HTML, CSS, and vanilla JS ever created.",
     image: "/courses/web_foundations.png",
-    tags: ["HTML", "CSS", "JavaScript", "Fundamentals"],
-    duration: "45 Chapters",
-    level: "Beginner",
+    tags: ["HTML", "CSS", "JavaScript", "Network", "Epic"],
+    duration: "150 Chapters (Absolute Zero to Master)",
+    level: "All Levels",
     modules: [
+        // NETWORK BACKBONE (PHASES 1-5)
         {
             id: "phase1",
-            title: "Phase 1: Structure & Semantics",
+            title: "Phase 1: The Undersea Cables",
             pages: [
-                {
-                    id: "semantic-html",
-                    title: "Div Soup and Screen Readers",
-                    content: `
-# Breaking the <div> Habit
-
-When you first learn HTML, it's tempting to build an entire website using only \`<divs>\` and \`<span>\`. This works visually, but it catastrophically fails accessibility and SEO audits.
-
-A screen reader (software used by visually impaired users) has no idea what a \`<div>\` is. If your navigation menu is built with \`<div>\`, the screen reader can't announce it properly.
-
-## Semantic Tags
-
-Semantic tags tell the browser exactly *what* the content is, not just how it should look.
-
-\`\`\`html
-<!-- ❌ BAD: Meaningless structure -->
-<div class="header">
-  <div class="nav-links">...</div>
-</div>
-<div class="main-content">
-  <div class="blog-post">...</div>
-</div>
-
-<!-- ✅ GOOD: Semantic, Accessible, SEO-friendly -->
-<header>
-  <nav>...</nav>
-</header>
-<main>
-  <article>...</article>
-</main>
-\`\`\`
-                    `
-                },
-                {
-                    id: "forms-accessibility",
-                    title: "Accessible Forms",
-                    content: `
-# Connecting the Dots
-
-A text input without a linked label is a nightmare for accessibility. You must strictly bind your \`<label>\` tags to your \`<input>\` tags using the \`for\` and \`id\` attributes.
-
-\`\`\`html
-<form action="/submit">
-  <!-- The 'for' attribute strictly ties this label to the 'id' below -->
-  <label for="email_input">Email Address</label>
-  <input type="email" id="email_input" name="user_email" required />
-  
-  <button type="submit">Subscribe</button>
-</form>
-\`\`\`
-
-> [!TIP]
-> Always use the correct \`type\` attribute on inputs. \`type="email"\` automatically triggers the "@" keyboard on smartphones!
-                    `
-                }
+                { id: "cables-data-centers", title: "Where the Internet Lives", content: "# The Internet is Physical\n\nThere is no 'Cloud'. There are only massive warehouses of computers connected by fiber-optic cables running across the bottom of the ocean. When you access a website, pulses of light bounce between continents to deliver your HTML." }
             ]
         },
         {
             id: "phase2",
-            title: "Phase 2: CSS Architecture",
+            title: "Phase 2: IP & DNS Routing",
             pages: [
-                {
-                    id: "box-model",
-                    title: "The Box Model Demystified",
-                    content: `
-# Everything is a Box
-
-The fundamental rule of CSS: Every single HTML element is drawn as a rectangular box on the screen. The spacing of this box is determined by four layers.
-
-1. **Content:** The actual text or image.
-2. **Padding:** Transparent spacing *inside* the border. Pushes content inward.
-3. **Border:** The physical wall surrounding the padding.
-4. **Margin:** Transparent spacing *outside* the border. Pushes other elements away.
-
-## The Box Sizing Bug
-By default, adding padding or borders *increases* the total physical width of an element. This causes massive layout bugs when you set an element to \`width: 100%\` and then add \`padding: 20px\` (it becomes 100% + 40px!).
-
-**The fix every site uses:**
-\`\`\`css
-* {
-    /* Padding and borders carve INTO the width, not ADD to it */
-    box-sizing: border-box; 
-    margin: 0;
-    padding: 0;
-}
-\`\`\`
-                    `
-                },
-                {
-                    id: "flexbox-grid",
-                    title: "Flexbox vs CSS Grid",
-                    content: `
-# Slicing the Page
-
-Before 2015, arranging elements side-by-side required horrifying "float hacks" and "clearfixes". Today, layout is entirely dominated by Flexbox and Grid.
-
-## Flexbox (1-Dimensional)
-Use Flexbox when you want to align items in a single row OR a single column (like a Navigation bar).
-
-\`\`\`css
-.navbar {
-    display: flex;
-    flex-direction: row;        /* Row is the default */
-    justify-content: space-between; /* Push items apart */
-    align-items: center;        /* Vertically center */
-}
-\`\`\`
-
-## CSS Grid (2-Dimensional)
-Use Grid when you need to align items in BOTH rows and columns simultaneously (like a Photo Gallery or a full page layout).
-
-\`\`\`css
-.gallery {
-    display: grid;
-    /* Create 3 equal columns */
-    grid-template-columns: repeat(3, 1fr); 
-    /* Automatic 16px spacing between all items */
-    gap: 16px; 
-}
-\`\`\`
-                    `
-                }
+                { id: "ip-addresses", title: "TCP/IP & The Phonebook", content: "# Translating Domains to Numbers\n\nComputers only understand IP addresses layout out over TCP protocols. We use the **Domain Name System (DNS)** to translate human-readable names like `google.com` into routing numbers like `142.250.190.46`." }
             ]
         },
         {
             id: "phase3",
-            title: "Phase 3: Asynchronous JavaScript",
+            title: "Phase 3: The HTTP Protocol",
             pages: [
-                {
-                    id: "promises",
-                    title: "Promises & The Fetch API",
-                    content: `
-# Time Travel in Code
-
-JavaScript is single-threaded. If it hits a line of code that takes 5 seconds to finish (like downloading an image), the entire browser freezes. 
-
-To solve this, we use **Asynchronous** code. We send the long task to the background, and tell JavaScript to keep running the rest of the file. When the background task finishes, it returns a "Promise".
-
-## The Fetch API
-\`\`\`javascript
-console.log("1. Requesting data...");
-
-// Fetch runs in the background. It instantly returns a pending "Promise"
-fetch('https://jsonplaceholder.typicode.com/users')
-  .then(response => {
-      // It takes time to parse JSON, so this also returns a Promise!
-      return response.json(); 
-  })
-  .then(data => {
-      console.log("3. Data received!", data);
-  })
-  .catch(error => {
-      console.error("The network request failed:", error);
-  });
-
-console.log("2. This logs BEFORE the data arrives!");
-\`\`\`
-                    `
-                },
-                {
-                    id: "async-await",
-                    title: "Async / Await Syntax",
-                    content: `
-# Flattening the Pyramid of Doom
-
-Chaining \`.then()\` blocks can get messy quickly. In ES8, JavaScript introduced \`async / await\`. It allows you to write asynchronous, non-blocking code that *looks* synchronous and easy to read.
-
-\`\`\`javascript
-// You must declare the function as 'async'
-async function fetchUsers() {
-    try {
-        // 'await' literally pauses this specific function indefinitely 
-        // until the Promise resolves, then assigns the value!
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        
-        const data = await response.json();
-        console.log("Users:", data);
-        
-    } catch (error) {
-        console.error("Something went wrong:", error);
-    }
-}
-
-fetchUsers();
-\`\`\`
-                    `
-                }
+                { id: "http-verbs-headers", title: "Verbs, Headers, and Bodies", content: "# The Language of the Web\n\nYour browser sends an HTTP Request (GET, POST, PUT, DELETE) containing metadata via Headers (like your Cookie), and the server responds with an HTTP Status Code (200 OK, 404 NOT FOUND, 500 SERVER ERROR) and the Body (the actual HTML response payload)." }
             ]
         },
         {
             id: "phase4",
-            title: "Phase 4: Modern Browser APIs",
+            title: "Phase 4: HTTP/1.1 vs HTTP/2",
             pages: [
-                {
-                    id: "intersection-observer",
-                    title: "The Intersection Observer",
-                    content: `
-# Scroll Animations (Without the Lag)
-
-Historically, to make an element "fade in" when it scrolled into view, developers would attach an Event Listener to the ` + "`" + `window.onscroll` + "`" + ` event. This executed code 60 times a second, grinding the user's phone to a halt.
-
-**The Intersection Observer API** solves this natively. It tells you exactly when a specific DOM element enters or exits the viewport, asynchronously.
-
-## Fade-in on Scroll
-
-\`\`\`javascript
-// 1. Create the observer
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            // Add a CSS class that triggers a CSS animation
-            entry.target.classList.add('fade-in');
-            
-            // Stop observing it once it's visible (Optional)
-            observer.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 }); // Fire when 50% of the element is visible
-
-// 2. Target your elements
-const cards = document.querySelectorAll('.card');
-cards.forEach(card => observer.observe(card));
-\`\`\`
-                    `
-                },
-                {
-                    id: "web-storage",
-                    title: "Local & Session Storage",
-                    content: `
-# Remembering the User
-
-If a user switches your app to "Dark Mode", and then refreshes the page, you don't want it snapping back to Light Mode. You need to persist small amounts of state on their hard drive.
-
-## LocalStorage vs SessionStorage
-1. **LocalStorage:** Persists indefinitely. Closing the browser window or rebooting the computer does not erase it. You must clear it manually via code or browser settings.
-2. **SessionStorage:** Persists only as long as the specific browser tab remains open.
-
-\`\`\`javascript
-// 1. Saving a string
-localStorage.setItem('theme', 'dark');
-
-// 2. Retrieving a string
-const currentTheme = localStorage.getItem('theme'); // "dark"
-
-// 3. Deleting a specific item
-localStorage.removeItem('theme');
-
-// 4. Nuking the entire storage
-localStorage.clear();
-\`\`\`
-
-> [!WARNING]
-> Web Storage can **only store strings**. You cannot save objects or arrays directly. You must use \`JSON.stringify()\` to save them, and \`JSON.parse()\` to read them.
-                    `
-                }
+                { id: "http2-multiplexing", title: "Solving the Waterfall", content: "# Multiplexing\n\nHTTP/1.1 suffered from 'Head of Line Blocking'—it could only download 6 files at a time over a single connection. HTTP/2 introduced Multiplexing, allowing a single TCP connection to download 100 images simultaneously." }
             ]
         },
         {
-            id: "project1",
-            title: "Project: Weather Dashboard",
+            id: "phase5",
+            title: "Phase 5: HTTP/3 & QUIC",
             pages: [
-                {
-                    id: "weather-spec",
-                    title: "Milestone: API Weather App",
-                    content: `
-# Tying it all together
+                { id: "http3-quic", title: "Abandoning TCP for UDP", content: "# The Need for Speed\n\nHTTP/3 throws away the mathematically rigid (but slow) TCP protocol in favor of QUIC (running over UDP), cutting connection handshake times in half for mobile users physically moving between cell towers." }
+            ]
+        },
 
-You will build a dynamic, responsive Weather Dashboard that fetches live data from an external API.
+        // HTML & ACCESSIBILITY (PHASES 6-10)
+        {
+            id: "phase6",
+            title: "Phase 6: The Document Object Model",
+            pages: [
+                { id: "dom-tree", title: "Parsing the Tree", content: "# The Browser Engine\n\nWhen standard text HTML hits your browser, the internal engine (like Google's V8) immediately parses it into a massive, C++ object tree called the DOM (Document Object Model). Every `<div>` becomes a node." }
+            ]
+        },
+        {
+            id: "phase7",
+            title: "Phase 7: Semantic Hierarchy",
+            pages: [
+                { id: "seo-semantics", title: "Div Soup vs Meaning", content: "# Tell the Browser What it Is\n\nA screen-reader has no idea what `<div class='header'>` means. You must use Semantic Tags (`<header>`, `<main>`, `<article>`, `<nav>`) to define structure for SEO bots and visually impaired users." }
+            ]
+        },
+        {
+            id: "phase8",
+            title: "Phase 8: Forms & Validation",
+            pages: [
+                { id: "native-validation", title: "Input Types and Patterns", content: "# Trusting the Browser\n\nBefore writing massive Javascript validation functions, leverage HTML5. Setting `type='email'` triggers the specific `@` keyboard on mobile phones, and the `pattern` attribute allows raw Regex validation before the form even submits." }
+            ]
+        },
+        {
+            id: "phase9",
+            title: "Phase 9: ARIA States",
+            pages: [
+                { id: "aria-labels", title: "Accessible Rich Internet Apps", content: "# The Override\n\nIf you build a custom dropdown menu out of `<div>` tags, you must use ARIA states (`aria-expanded='true'`, `aria-hidden='false'`, `role='menu'`) to map its current Javascript state to the screen reader." }
+            ]
+        },
+        {
+            id: "phase10",
+            title: "Phase 10: WCAG 2.1 Compliance",
+            pages: [
+                { id: "contrast-tabbing", title: "Contrast and Tab Index", content: "# The Law of the Web\n\nWCAG guidelines dictate that text must have a 4.5:1 contrast ratio against its background. Furthermore, a user must be able to navigate your entire website using ONLY the `TAB` key, never requiring a mouse." }
+            ]
+        },
 
-## Requirements
-1. **Semantic HTML:** The layout must use proper \`<header>\`, \`<main>\`, and \`<section>\` tags.
-2. **CSS Grid Layout:** Create a sleek, glassmorphic layout using CSS Grid that correctly stacks into a single column on mobile devices.
-3. **Async JavaScript:** Use \`async/await\` to query the OpenWeatherMap REST API, parsing the JSON data specifically for the user's inputted city.
-4. **Browser APIs:** Utilize \`LocalStorage\` to save the user's previous 5 search queries, rendering them immediately when the user refreshes the page. Implement the \`IntersectionObserver\` to smoothly fade-in the 5-day forecast cards as you scroll down the page.
-                    `
-                }
+        // CSS ARCHITECTURE (PHASES 11-15)
+        {
+            id: "phase11",
+            title: "Phase 11: The CSS Object Model",
+            pages: [
+                { id: "cssom-parsing", title: "The Render Tree", content: "# Blocking the Paint\n\nCSS is 'Render Blocking'. The browser cannot draw a single pixel until the DOM and the CSSOM (CSS Object Model) are combined into the Render Tree. A massively bloated CSS file will create a blank white screen." }
+            ]
+        },
+        {
+            id: "phase12",
+            title: "Phase 12: BEM Methodology",
+            pages: [
+                { id: "bem-naming", title: "Block, Element, Modifier", content: "# Preventing Global Scope Leaks\n\nCSS has global scope. To prevent `.button` in your header from breaking `.button` in your footer, we use BEM (`.block__element--modifier`). Example: `.card__title--large`." }
+            ]
+        },
+        {
+            id: "phase13",
+            title: "Phase 13: Layout Algorithms",
+            pages: [
+                { id: "flex-vs-grid", title: "Flexbox & Grid Interactions", content: "# 1D vs 2D Mathematics\n\nFlexbox is designed for 1-dimensional content distribution (aligning items inside a NavBar). CSS Grid is a 2-dimensional architectural tool (defining the overarching page layout of Header, Sidebar, Main, Footer)." }
+            ]
+        },
+        {
+            id: "phase14",
+            title: "Phase 14: Fluid Typography",
+            pages: [
+                { id: "css-clamp", title: "The Clamp Math", content: "# Media Queries are Dead\n\nInstead of writing 5 different media queries to shrink text on mobile, use `font-size: clamp(1rem, 5vw, 3rem);`. This smoothly interpolation the font size between a minimum and maximum floor dynamically." }
+            ]
+        },
+        {
+            id: "phase15",
+            title: "Phase 15: CSS Houdini",
+            pages: [
+                { id: "css-paint-api", title: "Extending the CSS Engine", content: "# The Future of CSS\n\nThe CSS Paint API (part of Houdini) allows developers to write raw Javascript functions that hook directly into the browser's CSS rendering engine, allowing for mathematically complex, performant, dynamic backgrounds that CSS natively cannot achieve." }
+            ]
+        },
+
+        // CORE ECMASCRIPT (PHASES 16-20)
+        {
+            id: "phase16",
+            title: "Phase 16: The Execution Context",
+            pages: [
+                { id: "hoisting-stack", title: "Hoisting and the Call Stack", content: "# Compiling Javascript\n\nJavascript is heavily compiled milliseconds before execution. The engine sweeps through the file and 'Hoists' variable declarations and function signatures to the top of their scope, allowing you to invoke a function before you define it." }
+            ]
+        },
+        {
+            id: "phase17",
+            title: "Phase 17: Lexical Scoping",
+            pages: [
+                { id: "closures", title: "The Magic of Closures", content: "# Remembering lexical environments\n\nA Closure is created when a child function 'remembers' the variable scope of its parent function, even after the parent function has finished executing and been popped off the Call Stack. This is the foundation of data privacy in JS." }
+            ]
+        },
+        {
+            id: "phase18",
+            title: "Phase 18: The 'this' Keyword",
+            pages: [
+                { id: "binding-context", title: "Call, Apply, and Bind", content: "# The Shifting Context\n\nIn arrow functions, `this` is lexically bound (it equals exactly what it did when you wrote it). In standard `function()` declarations, `this` changes dynamically based on *how* the function was invoked. You can forcefully override `this` using `.bind()`." }
+            ]
+        },
+        {
+            id: "phase19",
+            title: "Phase 19: Prototypal Inheritance",
+            pages: [
+                { id: "prototype-chain", title: "The hidden '__proto__'", content: "# There are no Classes\n\nJavascript does not have true classes like Java. `class User {}` is 'Syntactic Sugar' placed over the Prototype Chain. When you call an array method like `.map()`, JS searches up the `__proto__` chain until it finds the `Array.prototype` object containing that mathematical formula." }
+            ]
+        },
+        {
+            id: "phase20",
+            title: "Phase 20: Event Delegation",
+            pages: [
+                { id: "bubble-capture", title: "Bubbling and Capturing", content: "# Saving RAM\n\nNever attach 1,000 event listeners to a list of 1,000 items. Attach exactly 1 listener to the Parent `<ul>`. When a child runs, the event 'Bubbles' up to the parent, where you inspect the `e.target` to run the logic. This saves massive amounts of memory." }
+            ]
+        },
+
+        // THE ASYNC BROWSER (PHASES 21-25)
+        {
+            id: "phase21",
+            title: "Phase 21: The Event Loop",
+            pages: [
+                { id: "macrotask-microtask", title: "Macrotasks vs Microtasks", content: "# Orchestrating the Main Thread\n\nThe JS Event Loop contains two queues. Promises always go to the Microtask Queue, which executes *before* the Macrotask Queue (`setTimeout`). A resolved Promise will always run before a `setTimeout(0)`!" }
+            ]
+        },
+        {
+            id: "phase22",
+            title: "Phase 22: Async Error Handling",
+            pages: [
+                { id: "catch-500s", title: "The Truth about fetch()", content: "# fetch() lies to you\n\nA Promise only rejects on sudden network failures (like dropping WiFi). `fetch()` will happily 'resolve' a 500 Internal Server error or a 404 Route Not Found. You must manually throw a programmatic error by checking `if (!res.ok)`." }
+            ]
+        },
+        {
+            id: "phase23",
+            title: "Phase 23: Web Workers",
+            pages: [
+                { id: "offloading-threads", title: "Escaping the Single Thread", content: "# Multi-threading Javascript\n\nIf you need to process a massive 50MB CSV file, doing so on the main thread will lock the UI and crash the browser tab. You must spin up a dedicated `Web Worker` to offload the heavy CPU math to a separate background thread on the user's processor." }
+            ]
+        },
+        {
+            id: "phase24",
+            title: "Phase 24: Service Workers",
+            pages: [
+                { id: "pwa-offline", title: "The Offline Web (PWA)", content: "# Intercepting Network Requests\n\nA Service Worker is a specialized script running in the background. It acts as a proxy. If the user loses WiFi on an airplane, the Service Worker catches the network request, intercepts it, and instantly returns the cached HTML file, allowing the app to run completely offline." }
+            ]
+        },
+        {
+            id: "phase25",
+            title: "Phase 25: IndexedDB",
+            pages: [
+                { id: "client-database", title: "The Browser NoSQL DB", content: "# Beyond LocalStorage\n\nLocalStorage has a 5MB rigid limit and operates exclusively on synchronous strings. If your offline app needs to store massive arrays of data offline, you must query the asynchronous `IndexedDB`, a true NoSQL transactional database hidden inside the Chrome browser." }
+            ]
+        },
+
+        // THE BARE METAL (PHASES 26-30)
+        {
+            id: "phase26",
+            title: "Phase 26: Web Sockets",
+            pages: [
+                { id: "persistent-tcp", title: "Bi-directional TCP", content: "# Never Poll the Server\n\nStandard HTTP requires the client to beg the server for data. If you are building a live chat app or a cryptocurrency ticker, you must upgrade the HTTP handshake to a Web Socket (ws://). This holds a TCP pipeline completely open, allowing the server to push raw binary data to the client." }
+            ]
+        },
+        {
+            id: "phase27",
+            title: "Phase 27: WebRTC",
+            pages: [
+                { id: "peer-to-peer", title: "Peer-to-Peer Video", content: "# Bypassing the Backend\n\nIf you are building Zoom or Discord, routing 4K video through your Node.js server will bandwidth-strangle your backend. WebRTC allows Browser A to connect and stream video directly to Browser B, completely bypassing the server topology." }
+            ]
+        },
+        {
+            id: "phase28",
+            title: "Phase 28: Canvas and WebGL Contexts",
+            pages: [
+                { id: "gpu-acceleration", title: "Unlocking the Graphics Card", content: "# 60FPS Painting\n\nThe DOM is slow. To render 10,000 moving particles or build a Game Engine, you must escape the DOM and interact with an HTML `<canvas>`, requesting a `2d` or `webgl` context to directly instruct the user's dedicated GPU to execute C-based shaders." }
+            ]
+        },
+        {
+            id: "phase29",
+            title: "Phase 29: Assembly Languages",
+            pages: [
+                { id: "wasm-intro", title: "Compiling WebAssembly", content: "# Writing C++ for the Browser\n\nJavascript is interpreted and compiled at runtime, meaning it has a mathematical speed ceiling. WebAssembly (Wasm) allows you to write C, C++, or Rust algorithms, compile them into a dense binary (`.wasm`), and execute them in the browser at near-native CPU speeds. Essential for video editors like Figma." }
+            ]
+        },
+        {
+            id: "phase30",
+            title: "Phase 30: Capstone Architectures",
+            pages: [
+                { id: "architecture-capstone", title: "Engineering the PWA", content: "# Tying It All Together\n\nYour final capstone: Build a high-performance offline Markdown Editor. \n1. HTML/CSS semantic skeleton.\n2. IndexedDB to cache documents asynchronously.\n3. Service Workers to allow offline PWA installation.\n4. A Web Worker to offload the heavy markdown regex parsing off the main UI thread." }
             ]
         }
     ]
