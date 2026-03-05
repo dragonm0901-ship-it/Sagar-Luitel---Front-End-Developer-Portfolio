@@ -25,6 +25,7 @@ const CourseViewer = () => {
     useEffect(() => {
         const foundCourse = courses.find(c => c.id === courseId);
         if (foundCourse) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCourse(foundCourse);
         } else {
             // Course not found
@@ -88,15 +89,15 @@ const CourseViewer = () => {
 
     // Custom CSS Markdown Component Styles
     const MarkdownComponents = {
-        h1: ({node, ...props}) => <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight text-white border-b border-white/10 pb-6" {...props} />,
-        h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-bold mt-12 mb-6 text-white" {...props} />,
-        h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-8 mb-4 text-[#ccff00]" {...props} />,
-        p: ({node, ...props}) => <p className="text-lg leading-relaxed text-gray-300 mb-6 font-light" {...props} />,
-        ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-6 text-lg text-gray-300 font-light space-y-2 marker:text-[#ccff00]" {...props} />,
-        ol: ({node, ...props}) => <ol className="list-decimal pl-6 mb-6 text-lg text-gray-300 font-light space-y-2 marker:text-[#ccff00]" {...props} />,
-        li: ({node, ...props}) => <li className="pl-2" {...props} />,
-        strong: ({node, ...props}) => <strong className="font-bold text-white" {...props} />,
-        code: ({node, inline, className, children, ...props}) => {
+        h1: ({...props}) => <h1 className="text-4xl md:text-5xl font-black mb-8 tracking-tight text-white border-b border-white/10 pb-6" {...props} />,
+        h2: ({...props}) => <h2 className="text-2xl md:text-3xl font-bold mt-12 mb-6 text-white" {...props} />,
+        h3: ({...props}) => <h3 className="text-xl font-bold mt-8 mb-4 text-[#ccff00]" {...props} />,
+        p: ({...props}) => <p className="text-lg leading-relaxed text-gray-300 mb-6 font-light" {...props} />,
+        ul: ({...props}) => <ul className="list-disc pl-6 mb-6 text-lg text-gray-300 font-light space-y-2 marker:text-[#ccff00]" {...props} />,
+        ol: ({...props}) => <ol className="list-decimal pl-6 mb-6 text-lg text-gray-300 font-light space-y-2 marker:text-[#ccff00]" {...props} />,
+        li: ({...props}) => <li className="pl-2" {...props} />,
+        strong: ({...props}) => <strong className="font-bold text-white" {...props} />,
+        code: ({inline, className, children, ...props}) => {
             const match = /language-(\w+)/.exec(className || '');
             return !inline && match ? (
                 <div className="relative group my-8 rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0c]">
@@ -120,7 +121,7 @@ const CourseViewer = () => {
                 </code>
             )
         },
-        blockquote: ({node, ...props}) => {
+        blockquote: ({...props}) => {
             // Check if it's an alert blockquote (github style > [!NOTE])
             const txt = props.children[1]?.props?.children?.[0] || '';
             if (typeof txt === 'string') {
@@ -144,7 +145,7 @@ const CourseViewer = () => {
                 <blockquote className="border-l-2 border-[#ccff00] pl-6 py-2 my-8 italic text-gray-400 text-lg bg-gradient-to-r from-[#ccff00]/5 to-transparent rounded-r-xl" {...props} />
             );
         },
-        img: ({node, ...props}) => (
+        img: ({...props}) => (
             <figure className="my-10">
                 <img className="w-full rounded-2xl border border-white/10" loading="lazy" {...props} />
                 {props.alt && <figcaption className="mt-4 text-center text-sm font-mono text-gray-500 uppercase tracking-widest">{props.alt}</figcaption>}

@@ -52,6 +52,7 @@ const MainLayout = () => {
     useEffect(() => {
         if (isEntered && !hasEnteredRef.current) {
             hasEnteredRef.current = true;
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setShowCinematic(true);
             // The unmount of the Cinematic effect is now handled internally by Framer Motion on exit, 
             // but we use a timeout to remove it from the DOM.
@@ -132,6 +133,7 @@ const MainLayout = () => {
                             title="NEON"
                             description="A cyberpunk inspired e-commerce experience featuring real-time 3D product customization."
                             tags={['React', 'WebGL']}
+                            themeColor={themeColor}
                             onViewCaseStudy={setActiveCaseStudy}
                         />
 
@@ -141,6 +143,7 @@ const MainLayout = () => {
                             title="VELOCITY"
                             description="High-performance automotive showcase with scroll-driven car configurator."
                             tags={['Next.js', 'GSAP']}
+                            themeColor={themeColor}
                             onViewCaseStudy={setActiveCaseStudy}
                         />
 
@@ -150,6 +153,7 @@ const MainLayout = () => {
                             title="AETHER"
                             description="Interactive generative art installation utilizing complex particle systems and audio reactivity."
                             tags={['Three.js', 'Physics']}
+                            themeColor={themeColor}
                             onViewCaseStudy={setActiveCaseStudy}
                         />
                     </section>

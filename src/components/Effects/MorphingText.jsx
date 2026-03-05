@@ -118,7 +118,6 @@ const MorphingText = ({ text = 'SAGAR\nLUITEL', themeColor = '#ccff00', color = 
 
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
-                let isScattered = false;
 
                 // Check mouse distance
                 if (mouse.active) {
@@ -127,27 +126,28 @@ const MorphingText = ({ text = 'SAGAR\nLUITEL', themeColor = '#ccff00', color = 
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
                     if (dist < SCATTER_RADIUS) {
-                        // Push particle away from mouse
-                        const force = (SCATTER_RADIUS - dist) / SCATTER_RADIUS;
-                        p.vx -= (dx / dist) * force * SCATTER_FORCE;
-                        p.vy -= (dy / dist) * force * SCATTER_FORCE;
-                        isScattered = true;
+                         const forceDirectionX = dx / dist || 0;
+                         const forceDirectionY = dy / dist || 0;
+                         const force = (SCATTER_RADIUS - dist) / SCATTER_RADIUS;
+                         const directionX = forceDirectionX * force * SCATTER_FORCE;
+                         const directionY = forceDirectionY * force * SCATTER_FORCE;
+                         
+                         p.vx -= directionX;
+                         p.vy -= directionY;
                     }
                 }
 
-                // Spring back to origin
+                // Spring back to origin continuously
                 const dx = p.originX - p.x;
                 const dy = p.originY - p.y;
-                p.vx += dx * 0.08;
-                p.vy += dy * 0.08;
+                p.vx += dx * 0.1; // Spring stiffness
+                p.vy += dy * 0.1;
 
-                // Friction
-                p.vx *= 0.85;
-                p.vy *= 0.85;
-
-                // Apply velocity
+                // Apply velocity and friction
                 p.x += p.vx;
                 p.y += p.vy;
+                p.vx *= 0.82; // Friction damping
+                p.vy *= 0.82;
 
                 // Draw particle
                 const distFromOrigin = Math.sqrt((p.x - p.originX) ** 2 + (p.y - p.originY) ** 2);

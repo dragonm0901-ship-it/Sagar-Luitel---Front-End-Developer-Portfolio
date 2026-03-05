@@ -1,4 +1,23 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, Component } from 'react';
+
+class ErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { hasError: false, error: null }; }
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, errorInfo) { console.error("Caught by ErrorBoundary:", error, errorInfo); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ color: 'red', padding: '20px', fontFamily: 'monospace', background: 'black', height: '100vh' }}>
+          <h2>React Crash</h2>
+          <pre>{this.state.error?.toString()}</pre>
+          <pre>{this.state.error?.stack}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import MainLayout from './components/Layout/MainLayout';
@@ -11,8 +30,9 @@ const CourseViewer = lazy(() => import('./components/Courses/CourseViewer'));
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Routes>
           {/* Main Portfolio Landing Page */}
           <Route path="/" element={<MainLayout />} />
           
@@ -38,7 +58,8 @@ function App() {
             } 
           />
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

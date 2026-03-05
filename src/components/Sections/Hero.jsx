@@ -38,33 +38,28 @@ const MagneticCTA = ({ href, target, rel, download, icon: Icon, children, themeC
     return (
         <motion.a 
             ref={ref} 
-            href={href}
-            target={target}
-            rel={rel}
+            href={href} 
+            target={target} 
+            rel={rel} 
             download={download}
             onClick={onClick}
-            onMouseMove={onMove} 
-            onMouseLeave={onLeave} 
-            whileTap={{ scale: 0.96 }}
-            className="relative z-20 flex items-center justify-center gap-3 px-8 py-4 rounded-full font-mono text-xs uppercase tracking-[0.2em] font-bold transition-all duration-300"
-            style={{
-                x, y,
-                backgroundColor: primary ? themeColor : 'transparent',
-                color: primary ? '#000000' : '#ffffff',
-                border: primary ? `1px solid ${themeColor}` : '1px solid rgba(255,255,255,0.2)',
-                boxShadow: primary ? `0 0 20px ${themeColor}40` : 'none',
-            }}
-            onMouseEnter={(e) => {
-                if (!primary) {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)';
-                    e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                } else {
-                    e.currentTarget.style.boxShadow = `0 0 30px ${themeColor}80`;
-                }
-            }}
+            onPointerMove={onMove} 
+            onPointerLeave={onLeave} 
+            animate={{ x: x.get(), y: y.get() }} 
+            transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
+            className={`group flex items-center gap-3 px-8 py-4 rounded-full font-mono text-sm uppercase tracking-widest font-bold backdrop-blur-md transition-all duration-300 border ${primary ? 'text-black bg-[var(--theme-color)] hover:bg-[var(--theme-color-hover)] border-transparent' : 'text-white bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/30'}`}
+            style={{ '--theme-color': themeColor, '--theme-color-hover': themeColor + 'dd' }}
         >
-            {children}
-            {Icon && <Icon size={16} />}
+            <span className="font-bold relative z-10 select-none pointer-events-none tracking-widest">{children}</span>
+            {Icon && (
+                <div className={`
+                    w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300
+                    ${primary ? 'bg-black text-[var(--theme-color)]' : 'bg-white/10 text-white'}
+                    group-hover:scale-110 group-hover:rotate-12
+                `}>
+                    <Icon size={16} strokeWidth={2.5} />
+                </div>
+            )}
         </motion.a>
     );
 };

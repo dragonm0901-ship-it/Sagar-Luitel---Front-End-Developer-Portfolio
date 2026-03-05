@@ -7,10 +7,10 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
     const particlesRef = useRef([]);
     const dimensionsRef = useRef({ w: 0, h: 0 });
 
-    const PARTICLE_COUNT = 120;
-    const CONNECTION_DISTANCE = 140;
-    const MOUSE_RADIUS = 180;
-    const MOUSE_FORCE = 0.08;
+    const PARTICLE_COUNT = 150;
+    const CONNECTION_DISTANCE = 160;
+    const MOUSE_RADIUS = 250;
+    const MOUSE_FORCE = 0.15;
 
     const initParticles = useCallback((width, height) => {
         const particles = [];

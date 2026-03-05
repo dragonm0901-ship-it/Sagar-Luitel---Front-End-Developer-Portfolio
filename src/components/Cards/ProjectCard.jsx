@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 
-const ProjectCard = ({ index, title, description, tags, onViewCaseStudy }) => {
+const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseStudy }) => {
     const cardRef = useRef(null);
 
     // Mouse position for spotlight
@@ -39,7 +39,13 @@ const ProjectCard = ({ index, title, description, tags, onViewCaseStudy }) => {
     };
 
     return (
-        <div className="horizontal-slide w-full min-h-[60vh] md:w-screen md:h-full flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 glass group p-6 md:p-0" style={{ perspective: 1200 }}>
+        <div 
+            className="horizontal-slide w-full min-h-[60vh] md:w-screen md:h-full flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 glass group p-6 md:p-0" 
+            style={{ 
+                perspective: 1200,
+                '--primary-color': themeColor || '#ccff00' 
+            }}
+        >
             <motion.div
                 ref={cardRef}
                 onMouseMove={handleMouseMove}
@@ -53,11 +59,11 @@ const ProjectCard = ({ index, title, description, tags, onViewCaseStudy }) => {
             >
                 {/* Spotlight Overlay */}
                 <motion.div
-                    className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-0"
+                    className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 z-0"
                     style={{
                         background: useMotionTemplate`
                             radial-gradient(
-                                800px circle at ${mouseX}px ${mouseY}px,
+                                600px circle at ${mouseX}px ${mouseY}px,
                                 var(--primary-color),
                                 transparent 40%
                             )

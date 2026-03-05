@@ -51,6 +51,7 @@ const KineticTypographyToy = ({ themeColor = "#00ffcc" }) => {
             }
         };
 
+        // eslint-disable-next-line react-hooks/unsupported-syntax
         class Particle {
             constructor(x, y) {
                 this.x = x + Math.random() * 200 - 100; // Start scattered
@@ -113,8 +114,24 @@ const KineticTypographyToy = ({ themeColor = "#00ffcc" }) => {
             mouse.y = -1000;
         };
 
+        const handleTouchMove = (e) => {
+            if (e.touches && e.touches.length > 0) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.touches[0].clientX - rect.left;
+                mouse.y = e.touches[0].clientY - rect.top;
+            }
+        };
+
+        const handleTouchEnd = () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        };
+
         canvas.addEventListener('mousemove', handleMouseMove);
         canvas.addEventListener('mouseleave', handleMouseLeave);
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+        canvas.addEventListener('touchend', handleTouchEnd);
+        canvas.addEventListener('touchcancel', handleTouchEnd);
 
         let animationId;
         const animate = () => {
@@ -131,13 +148,25 @@ const KineticTypographyToy = ({ themeColor = "#00ffcc" }) => {
         init();
         animate();
 
-        window.addEventListener('resize', init);
+        let resizeTimeout;
+        const handleResize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(init, 100);
+        };
+
+        window.addEventListener('resize', handleResize);
 
         return () => {
-            window.removeEventListener('resize', init);
-            canvas.removeEventListener('mousemove', handleMouseMove);
-            canvas.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('resize', handleResize);
+            if (canvas) {
+                canvas.removeEventListener('mousemove', handleMouseMove);
+                canvas.removeEventListener('mouseleave', handleMouseLeave);
+                canvas.removeEventListener('touchmove', handleTouchMove);
+                canvas.removeEventListener('touchend', handleTouchEnd);
+                canvas.removeEventListener('touchcancel', handleTouchEnd);
+            }
             cancelAnimationFrame(animationId);
+            clearTimeout(resizeTimeout);
         };
     }, [themeColor]);
 

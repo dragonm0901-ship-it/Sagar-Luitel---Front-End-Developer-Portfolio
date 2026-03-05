@@ -3,10 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, KeyRound, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
 // For Option 1 (Static Hashed Keys), we store the SHA-256 hashes of the valid secret keys here.
-// You can generate a new hash using a free online SHA-256 generator or Web Crypto API.
-// Hash: d40f119fe2b57f6c4e1bffda5370354660cd4d23232ff38048c131bdccb92b39
+// Hash for: sagar2026
 const VALID_KEY_HASHES = [
-    'd40f119fe2b57f6c4e1bffda5370354660cd4d23232ff38048c131bdccb92b39'
+    'b58c665affc9c64dbf9849aeb9a2a6020cf4704be2ae772f7ed044d3a6170ba4'
 ];
 
 // Helper to hash a string to SHA-256 using native browser API
