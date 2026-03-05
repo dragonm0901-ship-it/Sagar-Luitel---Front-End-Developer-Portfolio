@@ -10,6 +10,7 @@ const CourseCard = ({ course }) => {
     return (
         <motion.div 
             whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.97 }}
             className="group flex flex-col bg-[#0a0a0c] border border-white/5 hover:border-white/10 rounded-2xl overflow-hidden cursor-pointer transition-colors"
             onClick={() => navigate(`/courses/${course.id}`)}
         >

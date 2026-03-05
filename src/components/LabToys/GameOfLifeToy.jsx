@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
 const GameOfLifeToy = ({ themeColor = "#00ffcc" }) => {
     const canvasRef = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying] = useState(true);
     const [cellSize] = useState(8);
 
     useEffect(() => {

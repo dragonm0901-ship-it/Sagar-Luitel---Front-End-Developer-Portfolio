@@ -62,7 +62,6 @@ const experiments = [
 ];
 
 const LabCard = ({ experiment, themeColor, onClick }) => {
-    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <motion.div
@@ -70,10 +69,9 @@ const LabCard = ({ experiment, themeColor, onClick }) => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
+            whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.4 }}
             className="group relative flex flex-col w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#0a0a0d] border border-white/5 cursor-pointer"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
             onClick={() => onClick(experiment)}
         >
             {/* Background Image/Gradient */}
@@ -291,8 +289,9 @@ const Lab = () => {
                             className="flex flex-wrap gap-2 p-1 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md w-full sm:w-auto"
                         >
                             {categories.map(cat => (
-                                <button
+                                <motion.button
                                     key={cat}
+                                    whileTap={{ scale: 0.93 }}
                                     onClick={() => setFilter(cat)}
                                     className={`relative px-3 py-2 sm:px-4 text-[10px] sm:text-xs font-mono uppercase tracking-widest rounded-lg transition-colors flex-1 sm:flex-none text-center ${filter === cat ? 'text-black font-bold' : 'text-gray-400 hover:text-white'}`}
                                 >
@@ -304,26 +303,50 @@ const Lab = () => {
                                         />
                                     )}
                                     <span className="relative z-10 whitespace-nowrap">{cat}</span>
-                                </button>
+                                </motion.button>
                             ))}
                         </motion.div>
                     </div>
                 </div>
             </div>
 
-            {/* Grid */}
-            <motion.div layout className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                <AnimatePresence mode="popLayout">
-                    {filteredExperiments.map(exp => (
-                        <LabCard 
-                            key={exp.id} 
-                            experiment={exp} 
-                            themeColor={themeColor} 
-                            onClick={handleCardClick}
-                        />
-                    ))}
-                </AnimatePresence>
-            </motion.div>
+            {/* Grid — swipeable on mobile, 2-col grid on desktop */}
+            <div className="max-w-7xl mx-auto overflow-hidden">
+                {/* Desktop: standard 2-col grid */}
+                <motion.div layout className="hidden md:grid md:grid-cols-2 gap-6 md:gap-8">
+                    <AnimatePresence mode="popLayout">
+                        {filteredExperiments.map(exp => (
+                            <LabCard 
+                                key={exp.id} 
+                                experiment={exp} 
+                                themeColor={themeColor} 
+                                onClick={handleCardClick}
+                            />
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
+
+                {/* Mobile: horizontal drag carousel */}
+                <motion.div
+                    drag="x"
+                    dragConstraints={{ left: -(filteredExperiments.length - 1) * 280, right: 0 }}
+                    dragElastic={0.1}
+                    dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
+                    className="flex gap-4 md:hidden cursor-grab active:cursor-grabbing"
+                >
+                    <AnimatePresence mode="popLayout">
+                        {filteredExperiments.map(exp => (
+                            <div key={exp.id} className="min-w-[80vw] flex-shrink-0">
+                                <LabCard 
+                                    experiment={exp} 
+                                    themeColor={themeColor} 
+                                    onClick={handleCardClick}
+                                />
+                            </div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
+            </div>
             
 
 

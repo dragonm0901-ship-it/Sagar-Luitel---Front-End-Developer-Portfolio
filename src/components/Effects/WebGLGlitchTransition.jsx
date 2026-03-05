@@ -7,6 +7,7 @@ const WebGLGlitchTransition = ({ color, onComplete }) => {
 
     useEffect(() => {
         if (!containerRef.current) return;
+        const container = containerRef.current;
 
         // Scene setup
         const scene = new THREE.Scene();
@@ -16,7 +17,7 @@ const WebGLGlitchTransition = ({ color, onComplete }) => {
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        containerRef.current.appendChild(renderer.domElement);
+        container.appendChild(renderer.domElement);
 
         // Parse color
         const baseColor = new THREE.Color(color);
@@ -196,8 +197,8 @@ const WebGLGlitchTransition = ({ color, onComplete }) => {
         return () => {
             cancelAnimationFrame(animationFrameId);
             window.removeEventListener('resize', handleResize);
-            if (containerRef.current && renderer.domElement) {
-                 containerRef.current.removeChild(renderer.domElement);
+            if (container && renderer.domElement) {
+                 container.removeChild(renderer.domElement);
             }
             renderer.dispose();
             geometry.dispose();

@@ -1,11 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 
-const MorphingText = ({ text = 'SAGAR\nLUITEL', themeColor = '#ccff00', color = '#ffffff', fontSize = 'clamp(48px, 7vw, 88px)' }) => {
+const MorphingText = ({ text = 'SAGAR\nLUITEL', color = '#ffffff' }) => {
     const canvasRef = useRef(null);
     const particlesRef = useRef([]);
     const animFrameRef = useRef(null);
     const mouseRef = useRef({ x: -9999, y: -9999, active: false });
-    const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
 
     const SCATTER_RADIUS = 100;
     const SCATTER_FORCE = 12;
@@ -23,8 +22,6 @@ const MorphingText = ({ text = 'SAGAR\nLUITEL', themeColor = '#ccff00', color = 
         ctx.clearRect(0, 0, w, h);
         
         // Compute font size from the CSS clamp
-        const computedStyle = window.getComputedStyle(canvas.parentElement);
-        const parentWidth = parseFloat(computedStyle.width);
         // Parse clamp manually: clamp(48px, 7vw, 88px)
         const vwSize = window.innerWidth * 0.07;
         const actualFontSize = Math.max(48, Math.min(vwSize, 88));
@@ -84,7 +81,7 @@ const MorphingText = ({ text = 'SAGAR\nLUITEL', themeColor = '#ccff00', color = 
             const w = rect.width;
             const h = rect.height;
             
-            setDimensions({ w, h });
+
             canvas.width = w * dpr;
             canvas.height = h * dpr;
             canvas.style.width = w + 'px';

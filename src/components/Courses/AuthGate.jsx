@@ -57,7 +57,7 @@ const AuthGate = ({ children }) => {
             } else {
                 setError('Invalid Secret Key. Please try again.');
             }
-        } catch (err) {
+        } catch (_err) {
             setError('Authentication error occurred.');
         } finally {
             setIsLoading(false);

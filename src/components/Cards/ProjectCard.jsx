@@ -38,6 +38,15 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
         rotateY.set(0);
     };
 
+    // Touch handlers — position spotlight at fingerprint coordinates
+    const handleTouchStart = (e) => {
+        if (!cardRef.current) return;
+        const touch = e.touches[0];
+        const rect = cardRef.current.getBoundingClientRect();
+        mouseX.set(touch.clientX - rect.left);
+        mouseY.set(touch.clientY - rect.top);
+    };
+
     return (
         <div 
             className="horizontal-slide w-full min-h-[60vh] md:w-screen md:h-full flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 glass group p-6 md:p-0" 
@@ -50,16 +59,19 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
                 ref={cardRef}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchStart}
                 style={{
                     rotateX,
                     rotateY,
                     transformStyle: "preserve-3d"
                 }}
+                whileTap={{ scale: 0.98 }}
                 className="relative w-full md:w-[70%] h-full md:h-[60%] bg-zinc-900 border border-white/10 rounded-2xl md:rounded-xl overflow-hidden transition-[border-color] duration-500 hover:border-lime/30"
             >
-                {/* Spotlight Overlay */}
+                {/* Spotlight Overlay — visible on hover AND touch */}
                 <motion.div
-                    className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 z-0"
+                    className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 group-active:opacity-100 z-0"
                     style={{
                         background: useMotionTemplate`
                             radial-gradient(

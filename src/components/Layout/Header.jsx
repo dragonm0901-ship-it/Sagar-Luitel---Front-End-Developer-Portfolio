@@ -181,10 +181,11 @@ const MobileDynamicIsland = ({ navItems, themeColor }) => {
                         className="flex justify-around items-center w-full h-full relative"
                     >
                         {navItems.map((item) => (
-                            <a
+                            <motion.a
                                 key={item.label}
                                 href={item.href}
-                                onClick={(e) => {
+                                whileTap={{ scale: 0.85 }}
+                                onClick={(_e) => {
                                     setIsOpen(false);
                                 }}
                                 className="flex flex-col items-center justify-center flex-1 h-full pt-1"
@@ -197,7 +198,7 @@ const MobileDynamicIsland = ({ navItems, themeColor }) => {
                                 <span className="text-[9px] font-mono uppercase tracking-widest text-gray-400 mt-1">
                                     {item.label}
                                 </span>
-                            </a>
+                            </motion.a>
                         ))}
                     </motion.div>
                 )}

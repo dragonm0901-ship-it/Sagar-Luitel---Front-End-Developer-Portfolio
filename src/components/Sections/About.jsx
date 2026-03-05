@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Text, ContactShadows, Image, Environment, RoundedBox, OrbitControls } from '@react-three/drei';
-import { motion, useScroll } from 'framer-motion';
+import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { easing } from 'maath';
 import gsap from 'gsap';
@@ -115,12 +115,6 @@ const InteractiveScene = ({ stack }) => {
 
 const About = () => {
     const containerRef = useRef();
-
-    // Scroll Animations
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    });
 
     const stack = [
         { name: 'HTML',         url: '/icons/html.svg' },

@@ -17,11 +17,12 @@ const CodeCard = ({ color, isActive, onSelect }) => {
     const [hovered, setHovered] = useState(false);
 
     return (
-        <div
+        <motion.div
             className="code-card relative cursor-pointer select-none"
             onClick={() => onSelect(color.hex)}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
+            whileTap={{ scale: 0.93 }}
             style={{ willChange: 'transform' }}
         >
             {/* Outer glow */}
@@ -105,7 +106,7 @@ const CodeCard = ({ color, isActive, onSelect }) => {
                     />
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -322,9 +323,10 @@ const EntranceOverlay = () => {
 
                         {/* ── BOTTOM: Enter + Status ── */}
                         <div className="relative z-10 w-full flex flex-col items-center justify-end gap-5 pb-8 sm:pb-12 px-4 mt-auto">
-                            <button
+                            <motion.button
                                 className="enter-btn group relative overflow-hidden font-black text-sm sm:text-base uppercase tracking-widest text-black"
                                 onClick={enterSite}
+                                whileTap={{ scale: 0.95 }}
                                 style={{
                                     backgroundColor: themeColor,
                                     padding: '14px 44px',
@@ -338,7 +340,7 @@ const EntranceOverlay = () => {
                                     <ArrowRight size={17} className="group-hover:translate-x-1.5 transition-transform duration-200" />
                                 </span>
                                 <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-400 ease-in-out" />
-                            </button>
+                            </motion.button>
 
                             <div className="status-line flex gap-6 sm:gap-10 text-[9px] sm:text-[10px] text-gray-700 font-mono">
                                 <span>v2.0.26</span>

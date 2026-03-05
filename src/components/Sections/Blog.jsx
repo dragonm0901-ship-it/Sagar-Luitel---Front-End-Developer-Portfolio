@@ -44,6 +44,14 @@ const BlogCard = ({ post, index, themeColor, onClick }) => {
         mouseY.set(e.clientY - rect.top);
     };
 
+    const handleTouchStart = (e) => {
+        if (!ref.current) return;
+        const touch = e.touches[0];
+        const rect = ref.current.getBoundingClientRect();
+        mouseX.set(touch.clientX - rect.left);
+        mouseY.set(touch.clientY - rect.top);
+    };
+
     return (
         <motion.div
             ref={ref}
@@ -51,12 +59,15 @@ const BlogCard = ({ post, index, themeColor, onClick }) => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: index * 0.15 }}
             onMouseMove={handleMouseMove}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchStart}
             onClick={onClick}
+            whileTap={{ scale: 0.97 }}
             className="group relative block rounded-2xl border border-white/10 overflow-hidden interactive-hover bg-white/[0.02] backdrop-blur-sm hover:border-white/20 transition-colors duration-500 cursor-pointer"
         >
-            {/* Spotlight overlay */}
+            {/* Spotlight overlay — visible on hover AND touch */}
             <motion.div
-                className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0 rounded-2xl"
+                className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300 z-0 rounded-2xl"
                 style={{
                     background: useMotionTemplate`
                         radial-gradient(
@@ -150,17 +161,40 @@ const Blog = () => {
                     </motion.div>
                 </div>
 
-                {/* Blog grid */}
-                <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {blogPosts.map((post, index) => (
-                        <BlogCard
-                            key={index}
-                            post={post}
-                            index={index}
-                            themeColor={themeColor}
-                            onClick={() => setActivePost(index)}
-                        />
-                    ))}
+                {/* Blog grid — swipeable on mobile, 3-col grid on desktop */}
+                <div className="max-w-6xl mx-auto px-6 md:px-12 overflow-hidden">
+                    {/* Desktop: standard grid */}
+                    <div className="hidden md:grid md:grid-cols-3 gap-6">
+                        {blogPosts.map((post, index) => (
+                            <BlogCard
+                                key={index}
+                                post={post}
+                                index={index}
+                                themeColor={themeColor}
+                                onClick={() => setActivePost(index)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Mobile: horizontal drag carousel */}
+                    <motion.div
+                        drag="x"
+                        dragConstraints={{ left: -(blogPosts.length - 1) * 300, right: 0 }}
+                        dragElastic={0.1}
+                        dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
+                        className="flex gap-4 md:hidden cursor-grab active:cursor-grabbing"
+                    >
+                        {blogPosts.map((post, index) => (
+                            <div key={index} className="min-w-[85vw] flex-shrink-0">
+                                <BlogCard
+                                    post={post}
+                                    index={index}
+                                    themeColor={themeColor}
+                                    onClick={() => setActivePost(index)}
+                                />
+                            </div>
+                        ))}
+                    </motion.div>
                 </div>
             </section>
 
