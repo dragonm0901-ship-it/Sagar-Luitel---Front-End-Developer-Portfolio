@@ -37,6 +37,14 @@ const BlogCard = ({ post, index, themeColor, onClick }) => {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
+    const spotlightBg = useMotionTemplate`
+        radial-gradient(
+            500px circle at ${mouseX}px ${mouseY}px,
+            rgba(204, 255, 0, 0.08),
+            transparent 40%
+        )
+    `;
+
     const handleMouseMove = (e) => {
         if (!ref.current) return;
         const rect = ref.current.getBoundingClientRect();
@@ -69,13 +77,7 @@ const BlogCard = ({ post, index, themeColor, onClick }) => {
             <motion.div
                 className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300 z-0 rounded-2xl"
                 style={{
-                    background: useMotionTemplate`
-                        radial-gradient(
-                            500px circle at ${mouseX}px ${mouseY}px,
-                            rgba(204, 255, 0, 0.08),
-                            transparent 40%
-                        )
-                    `,
+                    background: spotlightBg,
                 }}
             />
 
@@ -161,10 +163,9 @@ const Blog = () => {
                     </motion.div>
                 </div>
 
-                {/* Blog grid — swipeable on mobile, 3-col grid on desktop */}
-                <div className="max-w-6xl mx-auto px-6 md:px-12 overflow-hidden">
-                    {/* Desktop: standard grid */}
-                    <div className="hidden md:grid md:grid-cols-3 gap-6">
+                {/* Blog grid — vertical stack on mobile, 3-col grid on desktop */}
+                <div className="max-w-6xl mx-auto px-6 md:px-12">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {blogPosts.map((post, index) => (
                             <BlogCard
                                 key={index}
@@ -175,26 +176,6 @@ const Blog = () => {
                             />
                         ))}
                     </div>
-
-                    {/* Mobile: horizontal drag carousel */}
-                    <motion.div
-                        drag="x"
-                        dragConstraints={{ left: -(blogPosts.length - 1) * 300, right: 0 }}
-                        dragElastic={0.1}
-                        dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
-                        className="flex gap-4 md:hidden cursor-grab active:cursor-grabbing"
-                    >
-                        {blogPosts.map((post, index) => (
-                            <div key={index} className="min-w-[85vw] flex-shrink-0">
-                                <BlogCard
-                                    post={post}
-                                    index={index}
-                                    themeColor={themeColor}
-                                    onClick={() => setActivePost(index)}
-                                />
-                            </div>
-                        ))}
-                    </motion.div>
                 </div>
             </section>
 

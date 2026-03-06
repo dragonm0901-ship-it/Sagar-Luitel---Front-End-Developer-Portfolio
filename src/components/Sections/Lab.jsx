@@ -155,19 +155,19 @@ const InteractiveModal = ({ experiment, onClose, themeColor }) => {
             >
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/5 bg-black/40">
-                    <div className="flex items-center gap-4">
-                        <h3 className="font-mono text-lg text-white font-bold">{experiment.title}</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                        <h3 className="font-mono text-base sm:text-lg text-white font-bold truncate">{experiment.title}</h3>
                         
                         {/* Toggles */}
-                        <div className="flex bg-white/5 p-1 rounded-lg">
+                        <div className="flex bg-white/5 p-1 rounded-lg flex-shrink-0">
                             <button 
-                                className={`px-4 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-colors ${viewMode === 'demo' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}
+                                className={`px-3 sm:px-4 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-colors ${viewMode === 'demo' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}
                                 onClick={() => setViewMode('demo')}
                             >
                                 <Play size={12} className="inline mr-1 -mt-0.5" /> Demo
                             </button>
                             <button 
-                                className={`px-4 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-colors ${viewMode === 'code' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}
+                                className={`px-3 sm:px-4 py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-colors ${viewMode === 'code' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'}`}
                                 onClick={() => setViewMode('code')}
                             >
                                 <Code size={12} className="inline mr-1 -mt-0.5" /> Source
@@ -310,10 +310,9 @@ const Lab = () => {
                 </div>
             </div>
 
-            {/* Grid — swipeable on mobile, 2-col grid on desktop */}
-            <div className="max-w-7xl mx-auto overflow-hidden">
-                {/* Desktop: standard 2-col grid */}
-                <motion.div layout className="hidden md:grid md:grid-cols-2 gap-6 md:gap-8">
+            {/* Grid — vertical stack on mobile, 2-col grid on desktop */}
+            <div className="max-w-7xl mx-auto">
+                <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                     <AnimatePresence mode="popLayout">
                         {filteredExperiments.map(exp => (
                             <LabCard 
@@ -322,27 +321,6 @@ const Lab = () => {
                                 themeColor={themeColor} 
                                 onClick={handleCardClick}
                             />
-                        ))}
-                    </AnimatePresence>
-                </motion.div>
-
-                {/* Mobile: horizontal drag carousel */}
-                <motion.div
-                    drag="x"
-                    dragConstraints={{ left: -(filteredExperiments.length - 1) * 280, right: 0 }}
-                    dragElastic={0.1}
-                    dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
-                    className="flex gap-4 md:hidden cursor-grab active:cursor-grabbing"
-                >
-                    <AnimatePresence mode="popLayout">
-                        {filteredExperiments.map(exp => (
-                            <div key={exp.id} className="min-w-[80vw] flex-shrink-0">
-                                <LabCard 
-                                    experiment={exp} 
-                                    themeColor={themeColor} 
-                                    onClick={handleCardClick}
-                                />
-                            </div>
                         ))}
                     </AnimatePresence>
                 </motion.div>

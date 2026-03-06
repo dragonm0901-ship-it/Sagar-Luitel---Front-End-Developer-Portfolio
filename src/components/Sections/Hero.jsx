@@ -46,10 +46,9 @@ const MagneticCTA = ({ href, target, rel, download, icon: Icon, children, themeC
             onPointerMove={onMove} 
             onPointerLeave={onLeave} 
             whileTap={{ scale: 0.95 }}
-            animate={{ x: x.get(), y: y.get() }} 
             transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
             className={`group flex items-center gap-3 px-8 py-4 rounded-full font-mono text-sm uppercase tracking-widest font-bold backdrop-blur-md transition-all duration-300 border ${primary ? 'text-black bg-[var(--theme-color)] hover:bg-[var(--theme-color-hover)] border-transparent' : 'text-white bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/30'}`}
-            style={{ '--theme-color': themeColor, '--theme-color-hover': themeColor + 'dd' }}
+            style={{ x, y, '--theme-color': themeColor, '--theme-color-hover': themeColor + 'dd' }}
         >
             <span className="font-bold relative z-10 select-none pointer-events-none tracking-widest">{children}</span>
             {Icon && (

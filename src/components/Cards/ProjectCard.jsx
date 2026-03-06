@@ -12,6 +12,14 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
     const rotateX = useSpring(0, { stiffness: 300, damping: 30 });
     const rotateY = useSpring(0, { stiffness: 300, damping: 30 });
 
+    const spotlightBg = useMotionTemplate`
+        radial-gradient(
+            600px circle at ${mouseX}px ${mouseY}px,
+            var(--primary-color),
+            transparent 40%
+        )
+    `;
+
     const handleMouseMove = (e) => {
         if (!cardRef.current) return;
 
@@ -73,13 +81,7 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
                 <motion.div
                     className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 group-active:opacity-100 z-0"
                     style={{
-                        background: useMotionTemplate`
-                            radial-gradient(
-                                600px circle at ${mouseX}px ${mouseY}px,
-                                var(--primary-color),
-                                transparent 40%
-                            )
-                        `,
+                        background: spotlightBg,
                     }}
                 />
 

@@ -13,7 +13,7 @@ const NAV_ITEMS = [
     { icon: Mail,      href: '#contact',     label: 'Contact'    },
 ];
 
-    const Header = () => {
+const Header = () => {
     const { themeColor } = useTheme();
     const [isExpanded, setIsExpanded] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
