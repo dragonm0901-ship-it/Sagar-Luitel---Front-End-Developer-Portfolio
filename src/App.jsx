@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, Component } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
 class ErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { hasError: false, error: null }; }
@@ -59,6 +60,7 @@ function App() {
           />
         </Routes>
         </BrowserRouter>
+        <Analytics />
       </ErrorBoundary>
     </ThemeProvider>
   );
