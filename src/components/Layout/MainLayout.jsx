@@ -178,9 +178,9 @@ const MainLayout = () => {
                         </a>
                         <div className="flex gap-6 md:gap-8 mt-10 md:mt-12">
                             {[
-                                { name: 'Twitter',   href: 'https://x.com/sagarluitel' },
-                                { name: 'LinkedIn',  href: 'https://linkedin.com/in/sagarluitel' },
-                                { name: 'GitHub',    href: 'https://github.com/sagarluitel' },
+                                { name: 'TikTok',    href: 'https://www.tiktok.com/@sagar.luitel.tech?_r=1&_t=ZS-94UJDvX6T0D' },
+                                { name: 'LinkedIn',  href: 'https://www.linkedin.com/in/sagar-luitel-4a510730a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app' },
+                                { name: 'GitHub',    href: 'https://github.com/dragonm0901-ship-it' },
                             ].map(s => (
                                 <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="text-sm md:text-lg font-bold uppercase tracking-wider hover:opacity-50 transition-opacity">
                                     {s.name}

@@ -113,9 +113,17 @@ const Header = () => {
             </div>
 
             {/* ── MOBILE: Dynamic Island Navigation (Option A) ── */}
-            <div className="fixed bottom-6 left-0 right-0 z-50 sm:hidden flex justify-center pointer-events-none">
-                <MobileDynamicIsland navItems={NAV_ITEMS} themeColor={themeColor} />
-            </div>
+            <AnimatePresence>
+                <motion.div 
+                    className="fixed bottom-6 left-0 right-0 z-50 sm:hidden flex justify-center pointer-events-none"
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 100, opacity: 0 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                >
+                    <MobileDynamicIsland navItems={NAV_ITEMS} themeColor={themeColor} />
+                </motion.div>
+            </AnimatePresence>
         </>
     );
 };

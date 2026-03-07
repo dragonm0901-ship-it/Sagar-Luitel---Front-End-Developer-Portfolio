@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, ArrowUpRight, Download, BookOpen } from 'lucide-react';
+// Importing a quick custom SVG icon for TikTok since Lucide doesn't have it natively in older versions
+const TikTokIcon = ({ size }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    </svg>
+);
 import ConstellationCanvas from '../Effects/ConstellationCanvas';
 import MorphingText from '../Effects/MorphingText';
 import MonochromeBloomPortrait from '../Effects/MonochromeBloomPortrait';
@@ -129,7 +135,7 @@ const RoleCycler = ({ themeColor }) => {
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 const Hero = () => {
-    const { themeColor } = useTheme();
+    const { themeColor, isEntered } = useTheme();
     const navigate = useNavigate();
 
     return (
@@ -139,8 +145,14 @@ const Hero = () => {
             {/* ── Full-width Constellation Background ── */}
             <ConstellationCanvas themeColor={themeColor} />
 
+
             {/* ── Content overlay ── */}
-            <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-0 flex flex-col items-center text-center">
+            <motion.div
+                className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-12 py-20 md:py-0 flex flex-col items-center text-center pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isEntered ? 1 : 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
 
                 {/* ── Portrait + Name block ── */}
                 <div className="flex flex-col items-center gap-2 mb-2">
@@ -149,7 +161,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1.5, ease: 'easeOut' }}
-                        className="mb-[-2rem] z-20"
+                        className="mb-[-2rem] z-20 pointer-events-auto"
                     >
                         <MonochromeBloomPortrait 
                             imageUrl="/sagar-portrait-transparent.png" 
@@ -158,7 +170,7 @@ const Hero = () => {
                     </motion.div>
 
                     {/* SAGAR LUITEL text */}
-                    <div className="flex flex-col items-center" style={{ perspective: '600px' }}>
+                    <div className="flex flex-col items-center pointer-events-auto" style={{ perspective: '600px' }}>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -205,7 +217,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 1 }}
-                    className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center"
+                    className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center pointer-events-auto"
                 >
                     <div className="flex flex-col sm:flex-row gap-4">
                         <MagneticCTA href="#work" icon={ArrowUpRight} themeColor={themeColor} primary>
@@ -220,9 +232,10 @@ const Hero = () => {
                         </MagneticCTA>
                     </div>
 
-                    <div className="flex gap-4">
-                        <MagneticSocial href="https://github.com/sagarluitel" icon={Github} themeColor={themeColor} />
-                        <MagneticSocial href="https://linkedin.com/in/sagarluitel" icon={Linkedin} themeColor={themeColor} />
+                    <div className="flex gap-4 z-50">
+                        <MagneticSocial href="https://github.com/dragonm0901-ship-it" icon={Github} themeColor={themeColor} />
+                        <MagneticSocial href="https://www.linkedin.com/in/sagar-luitel-4a510730a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" icon={Linkedin} themeColor={themeColor} />
+                        <MagneticSocial href="https://www.tiktok.com/@sagar.luitel.tech?_r=1&_t=ZS-94UJDvX6T0D" icon={TikTokIcon} themeColor={themeColor} />
                         <MagneticSocial href="/resume.pdf" download icon={Download} themeColor={themeColor} />
                     </div>
                 </motion.div>
@@ -251,7 +264,7 @@ const Hero = () => {
                     </div>
                 </motion.div>
 
-            </div>
+            </motion.div>
         </section>
     );
 };

@@ -36,7 +36,7 @@ const CodeCard = ({ color, isActive, onSelect }) => {
 
             {/* Card body */}
             <div
-                className="relative rounded-xl overflow-hidden w-[155px] sm:w-[178px] transition-transform duration-200"
+                className="relative rounded-xl overflow-hidden w-full transition-transform duration-200"
                 style={{
                     transform: hovered ? 'scale(1.06) translateY(-5px)' : 'scale(1) translateY(0)',
                     background: isActive
@@ -47,21 +47,21 @@ const CodeCard = ({ color, isActive, onSelect }) => {
                 }}
             >
                 {/* Mac titlebar */}
-                <div className="flex items-center gap-1.5 px-3 py-2.5 border-b border-white/5">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#ff5f57' }} />
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#febc2e' }} />
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: isActive ? color.hex : '#28c840' }} />
-                    <span className="ml-2 text-[9px] font-mono text-gray-600 truncate">colors.config.ts</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-2 sm:px-3 sm:py-2.5 border-b border-white/5">
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style={{ background: '#ff5f57' }} />
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style={{ background: '#febc2e' }} />
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" style={{ background: isActive ? color.hex : '#28c840' }} />
+                    <span className="ml-1.5 sm:ml-2 text-[8px] sm:text-[9px] font-mono text-gray-600 truncate">colors.config.ts</span>
                 </div>
 
                 {/* Code body */}
-                <div className="p-3.5 font-mono text-[10px] sm:text-[11px] leading-[1.75]">
+                <div className="p-2 sm:p-3.5 font-mono text-[8.5px] sm:text-[11px] leading-[1.6]">
                     <div>
                         <span className="text-[#c586c0]">{color.tokenType} </span>
                         <span className="text-[#9cdcfe]">{color.varName}</span>
                         <span className="text-gray-500"> = {'{'}</span>
                     </div>
-                    <div className="pl-3">
+                    <div className="pl-2 sm:pl-3">
                         <span className="text-[#9cdcfe]/70">value</span>
                         <span className="text-gray-500">: </span>
                         <span style={{ color: color.hex === '#ffffff' ? '#ccc' : color.hex }}>
@@ -69,11 +69,11 @@ const CodeCard = ({ color, isActive, onSelect }) => {
                         </span>
                         <span className="text-gray-600">,</span>
                     </div>
-                    <div className="pl-3 flex items-center gap-1.5">
+                    <div className="pl-2 sm:pl-3 flex items-center gap-1.5">
                         <span className="text-[#9cdcfe]/70">swatch</span>
                         <span className="text-gray-500">: </span>
                         <span
-                            className="inline-block w-3.5 h-3.5 rounded-[3px] border border-white/10 flex-shrink-0"
+                            className="inline-block w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-[3px] border border-white/10 flex-shrink-0"
                             style={{ background: color.hex }}
                         />
                     </div>
@@ -81,16 +81,16 @@ const CodeCard = ({ color, isActive, onSelect }) => {
                 </div>
 
                 {/* Name / check */}
-                <div className="px-3.5 pb-3 flex items-center justify-between">
+                <div className="px-2 pb-2 sm:px-3.5 sm:pb-3 flex items-center justify-between">
                     <span
-                        className="text-[9px] uppercase tracking-[0.15em] font-bold transition-colors duration-300"
+                        className="text-[8px] sm:text-[9px] uppercase tracking-[0.15em] font-bold transition-colors duration-300"
                         style={{ color: isActive ? color.hex : '#444' }}
                     >
                         {color.name}
                     </span>
                     {isActive && (
                         <div
-                            className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center flex-shrink-0"
                             style={{ background: color.hex }}
                         >
                             <Check size={9} color="#000" strokeWidth={3} />
@@ -306,11 +306,9 @@ const EntranceOverlay = () => {
 
                         {/* ── MIDDLE: Cards ── */}
                         <div className="relative z-10 w-full flex items-center justify-center px-4 py-8 sm:py-6 pb-20 sm:pb-24 min-h-[300px]">
-                            {/* Flex layout enables a perfect 3-top, 2-bottom split when max-width forces wrapping, 
-                                and degrades beautifully to 2-top, 2-middle, 1-bottom on narrow mobile screens */}
-                            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full max-w-[560px] md:max-w-[700px]">
+                            <div className="flex flex-wrap justify-center content-center gap-3 sm:gap-4 w-full max-w-[360px] sm:max-w-[580px] md:max-w-[700px]">
                                 {COLORS.map((color) => (
-                                    <div key={color.name} className="flex-shrink-0">
+                                    <div key={color.name} className="w-[calc(50%-6px)] sm:w-[178px]">
                                         <CodeCard
                                             color={color}
                                             isActive={themeColor === color.hex}

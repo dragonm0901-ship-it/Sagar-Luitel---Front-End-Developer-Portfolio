@@ -46,7 +46,7 @@ const MonochromeBloomPortrait = ({ imageUrl, themeColor }) => {
                 <img 
                     src={imageUrl} 
                     alt="Sagar Luitel" 
-                    className="absolute inset-0 w-full h-full object-contain filter grayscale contrast-125 brightness-[0.6] opacity-80"
+                    className="absolute inset-0 w-full h-full object-contain filter grayscale contrast-125 brightness-[0.5]"
                     draggable={false}
                 />
 

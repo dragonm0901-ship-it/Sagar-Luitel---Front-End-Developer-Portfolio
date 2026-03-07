@@ -6,11 +6,12 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
     const mouseRef = useRef({ x: -9999, y: -9999, active: false });
     const particlesRef = useRef([]);
     const dimensionsRef = useRef({ w: 0, h: 0 });
+    const shockwavesRef = useRef([]);
 
-    const PARTICLE_COUNT = 150;
-    const CONNECTION_DISTANCE = 160;
-    const MOUSE_RADIUS = 250;
-    const MOUSE_FORCE = 0.15;
+    const PARTICLE_COUNT = 180;
+    const CONNECTION_DISTANCE = 170;
+    const MOUSE_RADIUS = 100;
+    const MOUSE_FORCE = 0.05;
 
     const initParticles = useCallback((width, height) => {
         const particles = [];
@@ -23,6 +24,7 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
                 radius: Math.random() * 1.5 + 0.5,
                 baseRadius: Math.random() * 1.5 + 0.5,
                 opacity: Math.random() * 0.5 + 0.3,
+                pulsePhase: Math.random() * Math.PI * 2,
             });
         }
         particlesRef.current = particles;
@@ -68,12 +70,48 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
             const { w, h } = dimensionsRef.current;
             const particles = particlesRef.current;
             const mouse = mouseRef.current;
+            const shockwaves = shockwavesRef.current;
 
             ctx.clearRect(0, 0, w, h);
+
+            // Update shockwaves
+            for (let s = shockwaves.length - 1; s >= 0; s--) {
+                const sw = shockwaves[s];
+                sw.radius += sw.speed;
+                sw.opacity -= 0.012;
+                if (sw.opacity <= 0) {
+                    shockwaves.splice(s, 1);
+                    continue;
+                }
+
+                // Draw shockwave ring
+                ctx.beginPath();
+                ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${sw.opacity * 0.4})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Push particles outward from shockwave ring
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    const dx = p.x - sw.x;
+                    const dy = p.y - sw.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const ringDist = Math.abs(dist - sw.radius);
+
+                    if (ringDist < 40 && dist > 0) {
+                        const force = (40 - ringDist) / 40 * sw.force;
+                        p.vx += (dx / dist) * force;
+                        p.vy += (dy / dist) * force;
+                    }
+                }
+            }
 
             // Update particles
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
+                // Gentle pulse
+                p.pulsePhase += 0.02;
 
                 // Mouse gravity
                 if (mouse.active) {
@@ -86,7 +124,7 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
                         p.vx += (dx / dist) * force * MOUSE_FORCE;
                         p.vy += (dy / dist) * force * MOUSE_FORCE;
                         // Glow up near mouse
-                        p.radius = p.baseRadius + force * 2;
+                        p.radius = p.baseRadius + force * 3;
                     } else {
                         p.radius += (p.baseRadius - p.radius) * 0.05;
                     }
@@ -97,8 +135,8 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
                 // Apply velocity with friction
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vx *= 0.99;
-                p.vy *= 0.99;
+                p.vx *= 0.985;
+                p.vy *= 0.985;
 
                 // Bounce off edges with soft wrap
                 if (p.x < 0) { p.x = 0; p.vx *= -0.8; }
@@ -144,24 +182,29 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
             // Draw particles
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
+                const pulse = Math.sin(p.pulsePhase) * 0.15;
 
                 // Check if near mouse for glow
-                let isNearMouse = false;
+                let mouseProximity = 0;
                 if (mouse.active) {
                     const d = Math.sqrt((mouse.x - p.x) ** 2 + (mouse.y - p.y) ** 2);
-                    isNearMouse = d < MOUSE_RADIUS;
+                    if (d < MOUSE_RADIUS) {
+                        mouseProximity = 1 - d / MOUSE_RADIUS;
+                    }
                 }
 
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                const drawRadius = p.radius + pulse;
 
-                if (isNearMouse) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
+
+                if (mouseProximity > 0) {
                     // Glowing theme-colored dot near mouse
-                    ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${p.opacity + 0.4})`;
+                    ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${p.opacity + mouseProximity * 0.5})`;
                     ctx.shadowColor = themeColor;
-                    ctx.shadowBlur = 12;
+                    ctx.shadowBlur = 8 + mouseProximity * 16;
                 } else {
-                    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity + pulse * 0.3})`;
                     ctx.shadowColor = 'transparent';
                     ctx.shadowBlur = 0;
                 }
@@ -183,10 +226,21 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
             mouseRef.current = { ...mouseRef.current, active: false };
         };
         const onClick = (e) => {
-            // Explosion: push particles away from click point
             const rect = canvas.getBoundingClientRect();
             const mx = e.clientX - rect.left;
             const my = e.clientY - rect.top;
+
+            // Create shockwave
+            shockwavesRef.current.push({
+                x: mx,
+                y: my,
+                radius: 0,
+                speed: 4,
+                opacity: 1,
+                force: 0.8,
+            });
+
+            // Also do the existing explosion push
             const particles = particlesRef.current;
             for (let i = 0; i < particles.length; i++) {
                 const dx = particles[i].x - mx;
@@ -209,10 +263,28 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
         const onTouchEnd = () => {
             mouseRef.current = { ...mouseRef.current, active: false };
         };
+        const onTouchStart = (e) => {
+            // Trigger shockwave on tap
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const mx = touch.clientX - rect.left;
+            const my = touch.clientY - rect.top;
+            mouseRef.current = { x: mx, y: my, active: true };
+
+            shockwavesRef.current.push({
+                x: mx,
+                y: my,
+                radius: 0,
+                speed: 3.5,
+                opacity: 0.8,
+                force: 0.6,
+            });
+        };
 
         canvas.addEventListener('mousemove', onMouseMove);
         canvas.addEventListener('mouseleave', onMouseLeave);
         canvas.addEventListener('click', onClick);
+        canvas.addEventListener('touchstart', onTouchStart, { passive: true });
         canvas.addEventListener('touchmove', onTouchMove, { passive: true });
         canvas.addEventListener('touchend', onTouchEnd);
 
@@ -222,6 +294,7 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
             canvas.removeEventListener('mousemove', onMouseMove);
             canvas.removeEventListener('mouseleave', onMouseLeave);
             canvas.removeEventListener('click', onClick);
+            canvas.removeEventListener('touchstart', onTouchStart);
             canvas.removeEventListener('touchmove', onTouchMove);
             canvas.removeEventListener('touchend', onTouchEnd);
         };
@@ -230,8 +303,8 @@ const ConstellationCanvas = ({ themeColor = '#ccff00' }) => {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full z-0"
-            style={{ touchAction: 'none' }}
+            className="absolute inset-0 w-full h-full z-[1]"
+            style={{ touchAction: 'pan-y' }}
         />
     );
 };
