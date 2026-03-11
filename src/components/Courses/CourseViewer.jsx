@@ -17,15 +17,33 @@ const QnABox = ({ rawContent }) => {
     const [showAnswer, setShowAnswer] = useState(false);
     
     let q = "Question not found";
-    let h = "No hint available.";
-    let a = "No answer provided.";
+    let h = "";
+    let a = "";
+
+    let currentSection = null;
 
     const lines = rawContent.split('\n');
     lines.forEach(line => {
-        if(line.startsWith('Q: ')) q = line.substring(3);
-        if(line.startsWith('H: ')) h = line.substring(3);
-        if(line.startsWith('A: ')) a = line.substring(3);
+        if (line.startsWith('Q: ')) {
+            q = line.substring(3);
+            currentSection = 'q';
+        } else if (line.startsWith('H: ')) {
+            h = line.substring(3);
+            currentSection = 'h';
+        } else if (line.startsWith('A: ')) {
+            a = line.substring(3);
+            currentSection = 'a';
+        } else if (currentSection === 'h') {
+            h += (h ? '\n' : '') + line;
+        } else if (currentSection === 'a') {
+            a += (a ? '\n' : '') + line;
+        } else if (currentSection === 'q') {
+             q += (q ? '\n' : '') + line;
+        }
     });
+
+    if (!h) h = "No hint available.";
+    if (!a) a = "No answer provided.";
 
     return (
         <div className="my-8 rounded-2xl border border-white/10 bg-[#0a0a0c] overflow-hidden">
@@ -34,46 +52,56 @@ const QnABox = ({ rawContent }) => {
                     <div className="mt-1 w-7 h-7 rounded-full bg-[#ccff00]/20 flex items-center justify-center flex-shrink-0">
                         <span className="text-[#ccff00] text-sm font-bold">Q</span>
                     </div>
-                    <h3 className="text-xl font-medium text-white m-0 leading-snug flex-1">{q}</h3>
+                    <h3 className="text-xl font-medium text-white m-0 leading-snug flex-1 min-w-0 break-words whitespace-pre-wrap pr-2">
+                        {q}
+                    </h3>
                 </div>
                 
                 <div className="mt-6 flex flex-wrap gap-3">
-                    <button 
+                    <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => setShowHint(!showHint)}
                         className={`px-4 py-2 rounded-lg text-sm font-mono tracking-wide transition-colors ${showHint ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'}`}
                     >
                         {showHint ? 'Hide Hint' : 'Show Hint'}
-                    </button>
-                    <button 
+                    </motion.button>
+                    <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => setShowAnswer(!showAnswer)}
                         className={`px-4 py-2 rounded-lg text-sm font-mono tracking-wide transition-colors ${showAnswer ? 'bg-[#ccff00]/20 text-[#ccff00] border border-[#ccff00]/30' : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'}`}
                     >
                         {showAnswer ? 'Hide Answer' : 'Reveal Answer'}
-                    </button>
+                    </motion.button>
                 </div>
 
                 <AnimatePresence>
                     {showHint && (
                         <motion.div 
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
+                            initial={{ height: 0, opacity: 0, scale: 0.95 }}
+                            animate={{ height: 'auto', opacity: 1, scale: 1 }}
+                            exit={{ height: 0, opacity: 0, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
                             className="overflow-hidden"
                         >
-                            <div className="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-100/80 text-sm leading-relaxed">
-                                <strong className="text-blue-400 mr-2 uppercase tracking-widest text-[10px]">Hint</strong>{h}
+                            <div className="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-100/80 text-sm leading-relaxed whitespace-pre-wrap">
+                                <strong className="text-blue-400 block mb-2 uppercase tracking-widest text-[10px]">Hint</strong>
+                                {h}
                             </div>
                         </motion.div>
                     )}
                     {showAnswer && (
                         <motion.div 
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
+                            initial={{ height: 0, opacity: 0, scale: 0.95 }}
+                            animate={{ height: 'auto', opacity: 1, scale: 1 }}
+                            exit={{ height: 0, opacity: 0, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
                             className="overflow-hidden"
                         >
-                            <div className="mt-4 p-5 rounded-xl bg-[#ccff00]/5 border border-[#ccff00]/20 text-white leading-relaxed">
-                                <strong className="text-[#ccff00] mr-2 block mb-2 uppercase tracking-widest text-[10px]">Answer</strong>{a}
+                            <div className="mt-4 p-5 rounded-xl bg-[#ccff00]/5 border border-[#ccff00]/20 text-white leading-relaxed whitespace-pre-wrap">
+                                <strong className="text-[#ccff00] block mb-2 uppercase tracking-widest text-[10px]">Answer</strong>
+                                {a}
                             </div>
                         </motion.div>
                     )}
@@ -183,14 +211,14 @@ const CourseViewer = () => {
                         </div>
                         <span className="ml-auto text-[10px] uppercase tracking-widest font-mono text-gray-500">{match[1]}</span>
                     </div>
-                    <pre className="!bg-transparent !m-0 p-4 text-sm font-mono overflow-auto">
+                    <pre className="!bg-transparent !m-0 p-4 text-sm font-mono overflow-x-auto touch-pan-x whitespace-pre-wrap break-words custom-scrollbar">
                         <code className={className} {...props}>
                             {children}
                         </code>
                     </pre>
                 </div>
             ) : (
-                <code className="px-1.5 py-0.5 rounded-md bg-white/10 text-[#ccff00] font-mono text-sm" {...props}>
+                <code className="px-1.5 py-0.5 rounded-md bg-white/10 text-[#ccff00] font-mono text-sm break-words" {...props}>
                     {children}
                 </code>
             )
@@ -278,7 +306,7 @@ const CourseViewer = () => {
                 </div>
 
                 {/* Modules List */}
-                <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24 space-y-6">
+                <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pt-4 pb-24 space-y-6">
                     {course.modules.map((module, mIdx) => (
                         <div key={module.id} className="space-y-2">
                             <h4 className="text-xs font-mono uppercase tracking-widest text-[#ccff00] pl-2">
@@ -314,8 +342,7 @@ const CourseViewer = () => {
                 </div>
             </motion.aside>
 
-            {/* Main Content Area */}
-            <main className="flex-1 min-w-0 bg-[#050505]">
+            <main className="flex-1 min-w-0 bg-[#050505] overflow-x-hidden">
                 <div className="max-w-3xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
                     
                     {/* Breadcrumbs */}

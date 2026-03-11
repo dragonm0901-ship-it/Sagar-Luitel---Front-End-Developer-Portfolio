@@ -1,4 +1,4 @@
-﻿React JS & MERN Stack Development
+React JS & MERN Stack Development
 The Complete Masterclass Manual
 Table of Contents
 Part 1: The React Philosophy & Setup
@@ -23,7 +23,7 @@ ________________
 PART 1: THE REACT PHILOSOPHY & SETUP
 Chapter 1: The Evolution of Frontend (Why React?)
 1.1 The Dominance of React JS
-Before writing any code, it is crucial to understand the landscape of modern web development. According to Stack Overflow's 2023 developer survey, over 40% of developers worldwide use React JS. Created and maintained by Facebook (Meta), it powers massive platforms like Instagram, Netflix, and Airbnb. In India alone, platforms like Naukri and LinkedIn consistently show tens of thousands of job openings exclusively for React developers.
+Before writing any code, it is crucial to understand the landscape of modern web development. According to Stack Overflow's 2023 developer survey, over 40% of developers worldwide use React JS. Created and maintained by Facebook (Meta), it powers massive platforms like Instagram, Netflix, and Airbnb. In Nepal alone, platforms like MeroJob and LinkedIn consistently show tens of thousands of job openings exclusively for React developers.
 But what exactly is React? React is a JavaScript library for building user interfaces (UI). It is the "R" in the MERN stack (MongoDB, Express, React, Node.js). While Node and Express handle the backend server, and MongoDB handles the database, React is entirely responsible for what the user sees and interacts with on their screen.
 1.2 The Vanilla JS Problem (The Real DOM)
 To understand why React was invented, we must understand the problem it solves. In traditional web development (Vanilla HTML, CSS, and JS), we interact directly with the Real DOM (Document Object Model).
@@ -539,8 +539,8 @@ function App() {
   return (
     <div className="flex gap-4 p-10">
       {/* Passing custom invented properties */}
-      <Card username="Sarthak" age={26} city="Bhopal" />
-      <Card username="Aryan" age={22} city="Mumbai" />
+      <Card username="Sagar" age={26} city="Pokhara" />
+      <Card username="Aarav" age={22} city="Kathmandu" />
     </div>
   );
 }
@@ -554,7 +554,7 @@ JavaScript
 
 // 1. Accept the 'props' object
 function Card(props) {
-  console.log(props); // Prints: { username: "Sarthak", age: 26, city: "Bhopal" }
+  console.log(props); // Prints: { username: "Sagar", age: 26, city: "Pokhara" }
 
 
   return (
@@ -706,7 +706,7 @@ npm run dev
 Imagine you click a button in React to fetch 100 users from your backend. That data is not sitting on your local computer; it is sitting on a server somewhere in the world. It might take 1 second to arrive, or if the internet is slow, it might take 5 seconds.
 Because JavaScript is incredibly fast, it will not wait 5 seconds. It will instantly move to the next line of code. To handle this delay, Axios returns a Promise.
 A Promise in JavaScript has three states (The Pizza Analogy):
-1. Pending: I promise to buy you a pizza. Right now, the transaction is unresolved. (Like a friend who borrowed ₹500 and says "I'll pay you tomorrow" for 10 years—it is endlessly pending).
+1. Pending: I promise to buy you a pizza. Right now, the transaction is unresolved. (Like a friend who borrowed Rs. 500 and says "I'll pay you tomorrow" for 10 years—it is endlessly pending).
 2. Resolved (Fulfilled): I successfully bought you the pizza. The data has arrived.
 3. Rejected: The pizzeria was closed. The server threw a 404 Error.
 If you try to print the data immediately, you will just print Promise { <pending> }. To force JavaScript to pause and wait for the pizza to actually arrive, we use async / await.
