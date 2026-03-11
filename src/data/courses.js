@@ -1,4 +1,6 @@
-import { webFoundations } from './courses/web-foundations';
+import { htmlCss } from './courses/html-css';
+import { jsDomination } from './courses/js-domination';
+import { reactMern } from './courses/react-mern';
 import { reactVite } from './courses/react-vite';
 import { mern } from './courses/mern';
 import { threeJs } from './courses/three-js';
@@ -9,7 +11,9 @@ import { aiMastery } from './courses/ai-mastery';
 
 // Export an array of all courses
 export const courses = [
-    webFoundations,
+    htmlCss,
+    jsDomination,
+    reactMern,
     reactVite,
     reactTS,
     threeJs,

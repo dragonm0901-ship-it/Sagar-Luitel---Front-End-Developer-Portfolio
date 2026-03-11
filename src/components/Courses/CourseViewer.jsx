@@ -12,6 +12,77 @@ import 'prismjs/components/prism-tsx';
 
 import { courses } from '../../data/courses';
 
+const QnABox = ({ rawContent }) => {
+    const [showHint, setShowHint] = useState(false);
+    const [showAnswer, setShowAnswer] = useState(false);
+    
+    let q = "Question not found";
+    let h = "No hint available.";
+    let a = "No answer provided.";
+
+    const lines = rawContent.split('\n');
+    lines.forEach(line => {
+        if(line.startsWith('Q: ')) q = line.substring(3);
+        if(line.startsWith('H: ')) h = line.substring(3);
+        if(line.startsWith('A: ')) a = line.substring(3);
+    });
+
+    return (
+        <div className="my-8 rounded-2xl border border-white/10 bg-[#0a0a0c] overflow-hidden">
+            <div className="p-6">
+                <div className="flex items-start gap-4">
+                    <div className="mt-1 w-7 h-7 rounded-full bg-[#ccff00]/20 flex items-center justify-center flex-shrink-0">
+                        <span className="text-[#ccff00] text-sm font-bold">Q</span>
+                    </div>
+                    <h3 className="text-xl font-medium text-white m-0 leading-snug flex-1">{q}</h3>
+                </div>
+                
+                <div className="mt-6 flex flex-wrap gap-3">
+                    <button 
+                        onClick={() => setShowHint(!showHint)}
+                        className={`px-4 py-2 rounded-lg text-sm font-mono tracking-wide transition-colors ${showHint ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'}`}
+                    >
+                        {showHint ? 'Hide Hint' : 'Show Hint'}
+                    </button>
+                    <button 
+                        onClick={() => setShowAnswer(!showAnswer)}
+                        className={`px-4 py-2 rounded-lg text-sm font-mono tracking-wide transition-colors ${showAnswer ? 'bg-[#ccff00]/20 text-[#ccff00] border border-[#ccff00]/30' : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'}`}
+                    >
+                        {showAnswer ? 'Hide Answer' : 'Reveal Answer'}
+                    </button>
+                </div>
+
+                <AnimatePresence>
+                    {showHint && (
+                        <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-100/80 text-sm leading-relaxed">
+                                <strong className="text-blue-400 mr-2 uppercase tracking-widest text-[10px]">Hint</strong>{h}
+                            </div>
+                        </motion.div>
+                    )}
+                    {showAnswer && (
+                        <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="mt-4 p-5 rounded-xl bg-[#ccff00]/5 border border-[#ccff00]/20 text-white leading-relaxed">
+                                <strong className="text-[#ccff00] mr-2 block mb-2 uppercase tracking-widest text-[10px]">Answer</strong>{a}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
+};
+
 const CourseViewer = () => {
     const { courseId } = useParams();
     const navigate = useNavigate();
@@ -99,6 +170,9 @@ const CourseViewer = () => {
         strong: ({...props}) => <strong className="font-bold text-white" {...props} />,
         code: ({inline, className, children, ...props}) => {
             const match = /language-(\w+)/.exec(className || '');
+            if (!inline && match && match[1] === 'qna') {
+                return <QnABox rawContent={String(children)} />;
+            }
             return !inline && match ? (
                 <div className="relative group my-8 rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0c]">
                     <div className="flex items-center px-4 py-2 border-b border-white/5 bg-black/40">
@@ -181,7 +255,7 @@ const CourseViewer = () => {
 
             {/* Sidebar (Syllabus) */}
             <motion.aside 
-                className={`fixed lg:sticky top-0 left-0 h-[100svh] w-[300px] border-r border-white/5 bg-[#0a0a0c] z-50 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
+                className={`fixed lg:sticky top-0 left-0 h-[100svh] w-[300px] border-r border-white/5 bg-[#0a0a0c] z-50 flex flex-col overflow-hidden transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 {/* Header */}
                 <div className="p-6 border-b border-white/5 flex items-center justify-between">
@@ -204,7 +278,7 @@ const CourseViewer = () => {
                 </div>
 
                 {/* Modules List */}
-                <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+                <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24 space-y-6">
                     {course.modules.map((module, mIdx) => (
                         <div key={module.id} className="space-y-2">
                             <h4 className="text-xs font-mono uppercase tracking-widest text-[#ccff00] pl-2">
