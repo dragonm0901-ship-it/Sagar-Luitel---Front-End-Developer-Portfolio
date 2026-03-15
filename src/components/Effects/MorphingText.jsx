@@ -23,8 +23,11 @@ const MorphingText = ({ text = 'SAGAR\nLUITEL', color = '#ffffff' }) => {
         
         // Compute font size from the CSS clamp
         // Parse clamp manually: clamp(48px, 7vw, 88px)
-        const vwSize = window.innerWidth * 0.07;
-        const actualFontSize = Math.max(48, Math.min(vwSize, 88));
+        // Compute font size based on container height AND width
+        // Assume maximum 6 characters (LUITEL), Space Grotesk 900 is wide (~0.8 aspect)
+        const maxFontByHeight = h * 0.8;
+        const maxFontByWidth = (w * 0.9) / 5.5; 
+        const actualFontSize = Math.min(maxFontByHeight, maxFontByWidth, 120);
         
         ctx.font = `900 ${actualFontSize}px 'Space Grotesk', sans-serif`;
         ctx.fillStyle = '#ffffff';
@@ -198,7 +201,7 @@ const MorphingText = ({ text = 'SAGAR\nLUITEL', color = '#ffffff' }) => {
     }, [color, createParticles]);
 
     return (
-        <div className="relative w-full" style={{ height: 'clamp(100px, 16vw, 200px)' }}>
+        <div className="relative w-full h-full">
             <canvas
                 ref={canvasRef}
                 className="w-full h-full"

@@ -8,9 +8,8 @@ const TikTokIcon = ({ size }) => (
         <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
     </svg>
 );
-import ConstellationCanvas from '../Effects/ConstellationCanvas';
+import AdvancedHeroCanvas from '../Effects/AdvancedHeroCanvas';
 import MorphingText from '../Effects/MorphingText';
-import MonochromeBloomPortrait from '../Effects/MonochromeBloomPortrait';
 import { useTheme } from '../../context/ThemeContext';
 
 const ROLES = [
@@ -142,8 +141,8 @@ const Hero = () => {
         <section
             className="relative w-full min-h-[100svh] flex items-center justify-center bg-black overflow-hidden"
         >
-            {/* ── Full-width Constellation Background ── */}
-            <ConstellationCanvas themeColor={themeColor} />
+            {/* ── Full-width Bracket Dots Background ── */}
+            <AdvancedHeroCanvas themeColor={themeColor} />
 
 
             {/* ── Content overlay ── */}
@@ -154,28 +153,15 @@ const Hero = () => {
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
 
-                {/* ── Portrait + Name block ── */}
-                <div className="flex flex-col items-center gap-2 mb-2">
-                    {/* Portrait bloom interactable */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.5, ease: 'easeOut' }}
-                        className="mb-[-2rem] z-20 pointer-events-auto"
-                    >
-                        <MonochromeBloomPortrait 
-                            imageUrl="/sagar-portrait-transparent.png" 
-                            themeColor={themeColor} 
-                        />
-                    </motion.div>
-
-                    {/* SAGAR LUITEL text */}
-                    <div className="flex flex-col items-center pointer-events-auto" style={{ perspective: '600px' }}>
+                {/* ── Name block ── */}
+                <div className="flex flex-col items-center gap-2 mb-2 w-full">
+                    <div className="flex flex-col items-center pointer-events-auto w-full" style={{ perspective: '600px' }}>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 1, delay: 0.4 }}
                             style={{ height: 'clamp(60px, 12vw, 120px)' }}
+                            className="w-full relative"
                         >
                             <MorphingText
                                 text="SAGAR"
@@ -190,7 +176,7 @@ const Hero = () => {
                             animate={{ opacity: 1 }}
                             transition={{ duration: 1, delay: 0.6 }}
                             style={{ height: 'clamp(60px, 12vw, 120px)' }}
-                            className="-mt-2 sm:-mt-6"
+                            className="-mt-2 sm:-mt-6 w-full relative"
                         >
                             <MorphingText
                                 text="LUITEL"
@@ -248,11 +234,11 @@ const Hero = () => {
                     className="mt-16 sm:mt-24 flex flex-col items-center gap-3 pointer-events-none w-full"
                 >
                     <span 
-                        className="text-[9px] font-mono text-gray-400 tracking-[0.4em] uppercase opacity-60 ml-[0.4em]"
+                        className="text-[9px] font-mono text-white/70 tracking-[0.4em] uppercase ml-[0.4em] font-medium"
                     >
                         Scroll
                     </span>
-                    <div className="w-[1px] h-16 bg-gradient-to-b from-white/20 to-transparent overflow-hidden relative">
+                    <div className="w-[2px] h-16 bg-gradient-to-b from-white/20 to-transparent overflow-hidden relative">
                         <motion.div
                             className="absolute top-0 left-0 w-full h-[50%]"
                             style={{ 

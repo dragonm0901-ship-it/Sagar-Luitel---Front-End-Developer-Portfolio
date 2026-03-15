@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
+import { Github, ExternalLink } from 'lucide-react';
 
-const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseStudy }) => {
+const ProjectCard = ({ title, description, tags, themeColor, onViewCaseStudy, liveUrl, githubUrl }) => {
     const cardRef = useRef(null);
 
     // Mouse position for spotlight
@@ -75,8 +76,9 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
                     transformStyle: "preserve-3d"
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative w-full md:w-[70%] h-full md:h-[60%] bg-zinc-900 border border-white/10 rounded-2xl md:rounded-xl overflow-hidden transition-[border-color] duration-500 hover:border-lime/30"
+                className="relative w-full md:w-[70%] h-full md:h-[60%] bg-zinc-950 border border-white/10 rounded-2xl md:rounded-xl overflow-hidden transition-[border-color] duration-500 hover:border-lime/30"
             >
+
                 {/* Spotlight Overlay — visible on hover AND touch */}
                 <motion.div
                     className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 md:group-hover:opacity-100 group-active:opacity-100 z-0"
@@ -90,10 +92,7 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
                     className="relative z-10 p-6 md:p-10 flex flex-col justify-between h-full"
                     style={{ transform: "translateZ(60px)" }}
                 >
-                    <div className="flex justify-between items-start mb-10 md:mb-0">
-                        <span className="text-6xl md:text-9xl font-black text-white/5 transition-colors duration-500" style={{ color: 'var(--primary-color)', opacity: 0.15 }}>
-                            {index}
-                        </span>
+                    <div className="flex justify-end items-start mb-10 md:mb-0">
                         <div className="flex gap-2 flex-wrap justify-end">
                             {tags.map((tag, i) => (
                                 <span key={i} className="px-3 py-1 border border-white/20 rounded-full text-[10px] md:text-xs uppercase bg-black/50 backdrop-blur-md transition-colors duration-300" 
@@ -112,15 +111,30 @@ const ProjectCard = ({ index, title, description, tags, themeColor, onViewCaseSt
                         <p className="text-lg md:text-2xl mt-4 text-gray-400 max-w-xl group-hover:text-white transition-colors duration-300">
                             {description}
                         </p>
-                        {onViewCaseStudy && (
-                            <button
-                                onClick={() => onViewCaseStudy(title)}
-                                className="mt-6 text-sm font-mono font-bold uppercase tracking-wider text-gray-500 hover:text-[var(--primary-color)] transition-colors interactive-hover group/btn flex items-center gap-2"
-                            >
-                                View Case Study
-                                <span className="inline-block group-hover/btn:translate-x-1 transition-transform">→</span>
-                            </button>
-                        )}
+                        <div className="mt-8 flex flex-wrap gap-6 items-center">
+                            {onViewCaseStudy && (
+                                <button
+                                    onClick={() => onViewCaseStudy(title)}
+                                    className="text-sm font-mono font-bold uppercase tracking-wider text-gray-400 hover:text-[var(--primary-color)] transition-colors interactive-hover group/btn flex items-center gap-2"
+                                >
+                                    View Case Study
+                                    <span className="inline-block group-hover/btn:translate-x-1 transition-transform">→</span>
+                                </button>
+                            )}
+                            
+                            <div className="flex items-center gap-4 text-gray-500">
+                                {liveUrl && (
+                                    <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs md:text-sm font-mono font-bold uppercase tracking-wider hover:text-white transition-colors interactive-hover">
+                                        <ExternalLink size={14} /> Live Demo
+                                    </a>
+                                )}
+                                {githubUrl && (
+                                    <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs md:text-sm font-mono font-bold uppercase tracking-wider hover:text-white transition-colors interactive-hover">
+                                        <Github size={14} /> Source
+                                    </a>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </motion.div>

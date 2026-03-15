@@ -4,50 +4,50 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github } from 'lucide-react';
 
 const caseStudies = {
-    'NEON': {
-        title: 'NEON',
-        subtitle: 'Cyberpunk E-Commerce Experience',
-        tags: ['React', 'WebGL', 'Three.js', 'Stripe'],
-        overview: 'A fully immersive e-commerce platform inspired by cyberpunk aesthetics, featuring real-time 3D product customization, dynamic lighting, and a seamless checkout flow.',
-        problem: 'Traditional e-commerce sites feel flat and uninspired. Customers can\'t truly visualize products before purchasing, leading to high return rates and low engagement.',
-        solution: 'Built an interactive 3D product viewer using Three.js and React Three Fiber. Users can rotate, zoom, and customize product colors and materials in real-time. The entire UI uses glassmorphism with neon accents.',
+    'myRestro Manager': {
+        title: 'myRestro Manager',
+        subtitle: 'Modern Restaurant & Business SaaS',
+        tags: ['React', 'Tailwind CSS', 'Supabase', 'Node.js'],
+        overview: 'A comprehensive, modern Software-as-a-Service (SaaS) platform built originally to streamline restaurant management. It features robust tools for handling daily operations, staff, and orders.',
+        problem: 'Many restaurants and growing businesses struggle with scattered, outdated management tools that fail to communicate with each other, leading to operational inefficiencies.',
+        solution: 'Developed a unified, highly-scalable dashboard that centralizes operations. While designed for restaurants, the architecture is entirely flexible and can be adapted to manage any kind of business or organizational structure.',
         results: [
-            '40% increase in average session duration',
-            '25% reduction in product return rates',
-            'Featured on Awwwards Honorable Mention',
+            'Fully scalable architectural design',
+            'Real-time data synchronization via Supabase',
+            'Sleek, zero-friction modern interface'
         ],
-        liveUrl: '#',
-        githubUrl: 'https://github.com/sagarluitel',
+        liveUrl: 'https://myrestromanager.vercel.app/',
+        githubUrl: 'https://github.com/dragonm0901-ship-it/my-RestroManager',
     },
-    'VELOCITY': {
-        title: 'VELOCITY',
-        subtitle: 'Automotive Showcase Platform',
-        tags: ['Next.js', 'GSAP', 'Prismic CMS', 'Vercel'],
-        overview: 'A high-performance automotive showcase website with scroll-driven animations, a real-time car configurator, and buttery smooth 60fps transitions.',
-        problem: 'The client\'s existing car showcase website was slow, static, and failed to convey the premium feel of their brand. Mobile experience was particularly poor.',
-        solution: 'Rebuilt from scratch with Next.js for SSR performance, GSAP ScrollTrigger for cinematic scroll animations, and a custom car configurator that lets users explore color and trim options.',
+    'Project Peak': {
+        title: 'Project Peak',
+        subtitle: 'Premium Travel & Booking Platform',
+        tags: ['Next.js', 'React', 'Tailwind CSS', 'Framer Motion'],
+        overview: 'A premium, modern travel agency website designed to capture the breathtaking essence of exploration while providing a buttery-smooth browsing experience.',
+        problem: 'Travel agencies often rely on cluttered, template-based websites that fail to evoke the emotion and premium feel of the destinations they are selling.',
+        solution: 'Engineered a highly visual, animated experience using Next.js and modern animation libraries. The codebase is highly modular, meaning it can be easily refactored and scaled for any kind of bespoke business.',
         results: [
-            '95+ Lighthouse performance score',
-            '3x improvement in mobile load times',
-            '60% increase in dealer inquiry submissions',
+            'Immersive, responsive layout and animations',
+            'Blazing fast Next.js SSR performance',
+            'Easily adaptable for other business niches'
         ],
-        liveUrl: '#',
-        githubUrl: 'https://github.com/sagarluitel',
+        liveUrl: 'https://projectpeak.vercel.app/',
+        githubUrl: 'https://github.com/dragonm0901-ship-it/Project-Peak',
     },
-    'AETHER': {
-        title: 'AETHER',
-        subtitle: 'Generative Art Installation',
-        tags: ['Three.js', 'Web Audio API', 'GLSL Shaders', 'Physics'],
-        overview: 'An interactive generative art experience that creates unique visual compositions through complex particle systems, audio reactivity, and user interaction.',
-        problem: 'Digital art installations typically require expensive hardware and specialized software, making them inaccessible to most galleries and audiences.',
-        solution: 'Created a browser-based installation using WebGL shaders and the Web Audio API. The visuals react to ambient sound and user input, creating one-of-a-kind compositions that can run on any modern device.',
+    'Nivati': {
+        title: 'Nivati',
+        subtitle: 'Boutique Business Storefront',
+        tags: ['React', 'Tailwind CSS', 'Vite', 'Stripe'],
+        overview: 'A beautifully crafted e-commerce frontend engineered specifically for small businesses. It offers a premium digital presence at a reasonable, market-challenging price point and delivery timeline.',
+        problem: 'Small businesses often have to choose between cheap, generic website builders or prohibitively expensive custom sites, leaving a gap for affordable bespoke development.',
+        solution: 'Created a streamlined, highly optimized React template that delivers top-tier aesthetics and performance. The system is incredibly flexible and can be instantly refactored to suit any business model.',
         results: [
-            'Exhibited at 2 digital art shows',
-            'Over 5,000 unique compositions generated',
-            'Open-sourced with 200+ GitHub stars',
+            'Rapid development and deployment timeline',
+            'Market-challenging cost efficiency',
+            'Fully responsive boutique aesthetic'
         ],
-        liveUrl: '#',
-        githubUrl: 'https://github.com/sagarluitel',
+        liveUrl: 'https://nivati.vercel.app/',
+        githubUrl: 'https://github.com/dragonm0901-ship-it/Nivati---The-Flame-Craft',
     },
 };
 

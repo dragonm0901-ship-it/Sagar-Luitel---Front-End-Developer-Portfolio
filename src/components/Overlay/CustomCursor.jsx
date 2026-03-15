@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 const CustomCursor = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovering, setIsHovering] = useState(false);
-    const [isExcluded, setIsExcluded] = useState(false);
 
     useEffect(() => {
         const updateMousePosition = (e) => {
@@ -15,11 +14,6 @@ const CustomCursor = () => {
             // Check if we are hovering over an interactive element
             const isInteractive = e.target.closest('a, button, input, textarea, select, .interactive-hover');
             setIsHovering(!!isInteractive);
-
-            // Check if we are hovering over an element that should exclude the difference blend mode
-            // e.g., the portrait image
-            const excludedElement = e.target.closest('[data-cursor-exclude="true"]');
-            setIsExcluded(!!excludedElement);
         };
 
         window.addEventListener('mousemove', updateMousePosition);
@@ -38,12 +32,10 @@ const CustomCursor = () => {
 
     return (
         <motion.div
-            className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[100] flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                isExcluded ? 'mix-blend-normal bg-transparent border border-white/50' : 'mix-blend-difference bg-white'
-            }`}
+            className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[100] flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 transition-colors duration-200 bg-transparent border-2 border-white`}
             animate={{
-                x: mousePosition.x - 16, // offset by half width
-                y: mousePosition.y - 16, // offset by half height
+                x: mousePosition.x - 16,
+                y: mousePosition.y - 16,
                 scale: isHovering ? 2.5 : 1,
             }}
             transition={{

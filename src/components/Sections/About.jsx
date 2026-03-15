@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Text, ContactShadows, Image, Environment, RoundedBox, OrbitControls } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
@@ -31,8 +31,8 @@ const IconCard = ({ url, position, isSpinning }) => {
             onPointerOut={() => { setHover(false); document.body.style.cursor = 'auto'; }}
         >
             <Float speed={5} rotationIntensity={0} floatIntensity={1} floatingRange={[-0.1, 0.1]}>
-                {/* Rounded Glass Card */}
-                <RoundedBox args={[0.85, 0.85, 0.1]} radius={0.15} smoothness={4} position={[0, 0, -0.05]}>
+                {/* Rounded Glass Card (Increased size by 10%: 0.85 -> 0.935) */}
+                <RoundedBox args={[0.935, 0.935, 0.1]} radius={0.15} smoothness={4} position={[0, 0, -0.05]}>
                     <meshPhysicalMaterial
                         color="#101010"
                         roughness={0.2}
@@ -43,11 +43,11 @@ const IconCard = ({ url, position, isSpinning }) => {
                     />
                 </RoundedBox>
 
-                {/* The Icon */}
+                {/* The Icon (Increased scale by 10%: 0.6 -> 0.66) */}
                 <Image
                     url={url}
                     transparent
-                    scale={[0.6, 0.6, 1]}
+                    scale={[0.66, 0.66, 1]}
                     position={[0, 0, 0.06]}
                     toneMapped={false}
                 />
@@ -56,17 +56,32 @@ const IconCard = ({ url, position, isSpinning }) => {
     );
 };
 
+
 const InteractiveScene = ({ stack }) => {
     // State to track shuffled order of icons
     const [orderedStack, setOrderedStack] = useState(stack);
     const [isSpinning, setIsSpinning] = useState(false);
     const groupRef = useRef();
+    const sceneScaleRef = useRef([1, 1, 1]);
 
-    // Constant Circular Layout
+    const { viewport } = useThree();
+
+    // Constant Circular Layout (Increased radius by 10%: 2.2 -> 2.42)
     const getCirclePos = (i, total) => {
         const theta = (i / total) * Math.PI * 2;
-        return [Math.cos(theta) * 2.2, Math.sin(theta) * 2.2, 0];
+        return [Math.cos(theta) * 2.42, Math.sin(theta) * 2.42, 0];
     };
+
+    useFrame((state, delta) => {
+        // Responsive scaling: Ensure the ring (diameter ~5 + icons ~1 = 6 units) fits the viewport width
+        // and doesn't exceed its bounds on mobile.
+        const requiredWidth = 6.2; // roughly the diameter + icons + padding
+        const scale = Math.min(1, viewport.width / requiredWidth);
+        easing.damp3(sceneScaleRef.current, [scale, scale, scale], 0.2, delta);
+        if (groupRef.current) {
+            groupRef.current.scale.copy(sceneScaleRef.current);
+        }
+    });
 
     const handleSpin = () => {
         if (isSpinning || !groupRef.current) return;
@@ -99,7 +114,10 @@ const InteractiveScene = ({ stack }) => {
                 autoRotateSpeed={0.5}
             />
 
-            <group ref={groupRef} onClick={(e) => { e.stopPropagation(); handleSpin(); }}>
+            <group 
+                ref={groupRef} 
+                onClick={(e) => { e.stopPropagation(); handleSpin(); }}
+            >
                 {orderedStack.map((tech, i) => (
                     <IconCard
                         key={tech.name} // Use name as key to let React animate positions if desired, or index for swap
@@ -175,16 +193,20 @@ const About = () => {
                 </div>
 
                 {/* Right: 3D Skills Floating Scene */}
-                <div className="h-[60vh] w-full relative order-1 md:order-2">
-                    <Canvas camera={{ position: [0, 0, 7], fov: 50 }}> {/* Increased FOV/Camera distance to avoid cropping */}
-                        <ambientLight intensity={1} />
-                        <pointLight position={[10, 10, 10]} intensity={1.5} />
-                        <Environment preset="city" />
+                <div className="flex flex-col items-center justify-center gap-12 w-full relative order-1 md:order-2">
 
-                        <InteractiveScene stack={stack} />
+                    {/* 3D Skills Carousel */}
+                    <div className="h-[40vh] md:h-[50vh] w-full relative">
+                        <Canvas camera={{ position: [0, 0, 8.5], fov: 45 }}>
+                            <ambientLight intensity={1} />
+                            <pointLight position={[10, 10, 10]} intensity={1.5} />
+                            <Environment preset="city" />
 
-                        <ContactShadows opacity={0.4} scale={20} blur={2.5} far={4} resolution={256} color="#000000" />
-                    </Canvas>
+                            <InteractiveScene stack={stack} />
+
+                            <ContactShadows opacity={0.4} scale={20} blur={2.5} far={4} resolution={256} color="#000000" />
+                        </Canvas>
+                    </div>
                 </div>
 
             </div>

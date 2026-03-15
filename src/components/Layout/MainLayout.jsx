@@ -5,7 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import WebGLGlitchTransition from '../Effects/WebGLGlitchTransition';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -45,21 +44,7 @@ const MainLayout = () => {
     // Case study modal state
     const [activeCaseStudy, setActiveCaseStudy] = useState(null);
 
-    // Track first-ever entry to trigger cinematic effect exactly once
-    const [showCinematic, setShowCinematic] = useState(false);
-    const hasEnteredRef = useRef(false);
 
-    useEffect(() => {
-        if (isEntered && !hasEnteredRef.current) {
-            hasEnteredRef.current = true;
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setShowCinematic(true);
-            // The unmount of the Cinematic effect is now handled internally by Framer Motion on exit, 
-            // but we use a timeout to remove it from the DOM.
-            const t = setTimeout(() => setShowCinematic(false), 1500);
-            return () => clearTimeout(t);
-        }
-    }, [isEntered]);
 
     useGSAP(() => {
         const slides = gsap.utils.toArray('.horizontal-slide');
@@ -97,10 +82,6 @@ const MainLayout = () => {
                 {/* Entry overlay */}
                 <EntranceOverlay />
 
-                {/* ── Cinematic WebGL Glitch transition ── */}
-                <AnimatePresence>
-                    {showCinematic && <WebGLGlitchTransition key="cinematic" color={themeColor} onComplete={() => setShowCinematic(false)} />}
-                </AnimatePresence>
 
                 {/* Navbar */}
                 {isEntered && <Header />}
@@ -127,34 +108,40 @@ const MainLayout = () => {
                             </div>
                         </div>
 
-                        {/* Project A — NEON */}
+                        {/* Project 1 — myRestro Manager */}
                         <ProjectCard
                             index="01"
-                            title="NEON"
-                            description="A cyberpunk inspired e-commerce experience featuring real-time 3D product customization."
-                            tags={['React', 'WebGL']}
+                            title="myRestro Manager"
+                            description="A modern SAAS for managing restaurants, capable of scaling to any business or organization management needs."
+                            tags={['React', 'Tailwind CSS', 'Supabase', 'Node.js']}
                             themeColor={themeColor}
                             onViewCaseStudy={setActiveCaseStudy}
+                            liveUrl="https://myrestromanager.vercel.app/"
+                            githubUrl="https://github.com/dragonm0901-ship-it/my-RestroManager"
                         />
 
-                        {/* Project B — VELOCITY */}
+                        {/* Project 2 — Project Peak */}
                         <ProjectCard
                             index="02"
-                            title="VELOCITY"
-                            description="High-performance automotive showcase with scroll-driven car configurator."
-                            tags={['Next.js', 'GSAP']}
+                            title="Project Peak"
+                            description="A modern travel agency website, easily refactored and scaled for any kind of business."
+                            tags={['Next.js', 'React', 'Tailwind CSS', 'Framer Motion']}
                             themeColor={themeColor}
                             onViewCaseStudy={setActiveCaseStudy}
+                            liveUrl="https://projectpeak.vercel.app/"
+                            githubUrl="https://github.com/dragonm0901-ship-it/Project-Peak"
                         />
 
-                        {/* Project C — AETHER */}
+                        {/* Project 3 — Nivati */}
                         <ProjectCard
                             index="03"
-                            title="AETHER"
-                            description="Interactive generative art installation utilizing complex particle systems and audio reactivity."
-                            tags={['Three.js', 'Physics']}
+                            title="Nivati"
+                            description="A seamless business website built for small businesses at a competitive price and timeline, fully scalable."
+                            tags={['React', 'Tailwind CSS', 'Vite', 'Stripe']}
                             themeColor={themeColor}
                             onViewCaseStudy={setActiveCaseStudy}
+                            liveUrl="https://nivati.vercel.app/"
+                            githubUrl="https://github.com/dragonm0901-ship-it/Nivati---The-Flame-Craft"
                         />
                     </section>
 
